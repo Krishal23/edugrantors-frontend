@@ -1,0 +1,114 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #1a2361;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #050718;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #5166ef;
+}
+
+::-webkit-scrollbar-corner {
+  background-color: #1a2361;
+}
+
+
+body {
+  color: var(--foreground);
+}
+
+.hero_animation {
+  background-image: linear-gradient(147.92deg,
+      hsla(239, 76%, 53%, 0.456) 10.41%,
+      hsla(0, 0%, 100%, 0) 89.25%);
+  animation: changeBackgroundColor 8s infinite alternate;
+}
+
+
+
+@keyframes changeBackgroundColor {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  16.67% {
+    opacity: 0.9;
+  }
+
+  33.33% {
+    opacity: 0.8;
+  }
+
+  50% {
+    opacity: 0.6;
+  }
+
+  66.67% {
+    opacity: 0.5;
+  }
+
+  83.33% {
+    opacity: 0.4;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@keyframes shake {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-5px);
+  }
+
+  50% {
+    transform: translateX(5px);
+  }
+
+  75% {
+    transform: translateX(-5px);
+  }
+}
+
+.shake {
+  animation: shake 0.5s;
+}
