@@ -38,15 +38,28 @@ const ReviewCard = ({ question: answer, index }: CardProps) => {
           </p>
         </div>
         {/* Image */}
-        {answer?.image?.url && (
+        {/* {answer?.image?.url && (
           <img
             src={answer?.image?.url}
             alt="img loading..."
-            height={1200}
-            width={1800}
+            height={300}
+            width={500}
             className="max-w-[80vw] md:h-80 xxs:h-60 object-cover rounded-lg m-4"
           />
+        )} */}
+
+        {answer?.image?.url && (
+          <div className="mb-3 sm:mb-4">
+            <img
+              src={answer.image.url || "/placeholder.svg"}
+              alt="Question"
+              width={500}
+              height={300}
+              className="max-w-full h-auto rounded"
+            />
+          </div>
         )}
+
 
         {/* Correct Answer and Explanation */}
         <div className="mt-6 text-sm text-gray-300">

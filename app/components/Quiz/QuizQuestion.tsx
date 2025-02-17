@@ -170,9 +170,9 @@ const QuizQuestion = ({
   }, [timeLeft, redirect]);
 
   return (
-    <div className="flex justify-between ">
-      <div className=" min-h-screen w-4/5 bg-gray-900 text-white flex items-center justify-center">
-        <div className="w-4/5 h-[90vh] overflow-y-scroll  bg-gray-800 p-6 my-4 rounded-lg shadow-lg space-y-6">
+    <div className="flex justify-between min-h-screen">
+      <div className="min-h-screen w-full md:w-4/5 bg-gray-900 text-white flex items-center justify-center">
+        <div className="w-full md:w-4/5 h-[90vh] overflow-y-auto bg-gray-800 p-6 my-4 rounded-lg shadow-lg space-y-6">
           <h2 className="text-2xl text-gray-400 font-semibold flex gap-2 justify-between">
             <div className="text-sm text-gray-400 font-semibold flex-col gap-2 justify-start">
               <p className="text-sm ">Marks: {question.marks} </p>
@@ -189,13 +189,15 @@ const QuizQuestion = ({
             Q{currentQuestionIndex + 1}: {question.question}
           </p>
           {question?.image?.url && (
-            <img
-              src={question?.image?.url}
-              alt="img loading..."
-              width={900}
-              height={900}
-              className="max-w-[80vw] sm:h-48 xxs:h-16 object-cover rounded-lg m-2"
-            />
+            <div className="mb-3 sm:mb-4">
+              <img
+                src={question?.image?.url}
+                alt="img loading..."
+                width={900}
+                height={900}
+                className="max-w-full h-auto rounded"
+              />
+            </div>
           )}
 
           <div>
