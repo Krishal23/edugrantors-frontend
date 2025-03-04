@@ -116,7 +116,10 @@ const QuestionBank = ({ isQuiz, isEdit, isResource, selectedQuestions, setSelect
               <BsBank2 />
             </strong>
             {isPopupOpen && (
-              <AddQuestionPopup onClose={() => setIsPopupOpen(false)} mappedData={mappedData} refetch={refetch} />
+              <AddQuestionPopup onClose={() => {
+                setIsPopupOpen(false) 
+                refetch()
+              }} mappedData={mappedData} refetch={refetch} />
             )}
             {isResource && attempt && (
               <AttemptQuestion onClose={() => setAttempt(undefined)} attempts={data.questions} />

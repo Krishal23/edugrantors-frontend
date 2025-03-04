@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FaCheckCircle } from "react-icons/fa";
+import {  FaSpinner } from "react-icons/fa";
 import dynamic from "next/dynamic";
 import Loader from "@/app/components/Loader/Loader";
 import toast from "react-hot-toast";
@@ -33,7 +33,8 @@ export interface QuestionType {
   negativeMarks: number;
   correctAnswer: any;
   explanation: string;
-  image: any;
+  image?: any;
+  imageExplain?: any;
 }
 
 type Props = {
@@ -59,6 +60,8 @@ const QuestionInfoForm: React.FC<Props> = ({
   isEdit,
 }) => {
   const [dragging, setDragging] = useState(false);
+  const [draggingExplain, setDraggingExplain] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   const [questionData, setQuestionData] = useState<QuestionType>({
     type: type || "single", // Default to 'single' if no type is provided
@@ -74,26 +77,36 @@ const QuestionInfoForm: React.FC<Props> = ({
     negativeMarks: question?.negativeMarks || 0,
     explanation: question?.explanation || "",
     image: question?.image || "",
+    imageExplain: question?.imageExplain || "",
   });
   const [
     uploadQuestion,
-    { isSuccess: isUploadSuccess, isError: isUploadError },
+    { isSuccess: isUploadSuccess, isError: isUploadError, isLoading: isUploadLoading },
   ] = useUploadQuestionMutation();
-  const [editQuestion, { isSuccess: isEditSuccess, isError: isEditError }] =
+  const [editQuestion, { isSuccess: isEditSuccess, isError: isEditError, isLoading: isEditLoading }] =
     useEditQuestionMutation();
+
+  // Track the uploading state based on the mutation loading states
+  useEffect(() => {
+    setIsUploading(isUploadLoading || isEditLoading);
+  }, [isUploadLoading, isEditLoading]);
 
   useEffect(() => {
     if (isEditSuccess) {
       toast.success("Question Updated");
+      setIsUploading(false);
     }
     if (isUploadSuccess) {
       toast.success("Question Uploaded");
+      setIsUploading(false);
     }
     if (isEditError) {
       toast.error("Failed to Update.");
+      setIsUploading(false);
     }
     if (isUploadError) {
       toast.error("Failed to Upload.");
+      setIsUploading(false);
     }
   }, [isEditSuccess, isUploadSuccess, isEditError, isUploadError, refetch]);
 
@@ -131,6 +144,7 @@ const QuestionInfoForm: React.FC<Props> = ({
 
   const handleSubmit = async () => {
     if (validateForm(questionData)) {
+      setIsUploading(true);
       const data = {
         questionId: question?._id,
         ...questionData,
@@ -138,15 +152,39 @@ const QuestionInfoForm: React.FC<Props> = ({
         topic,
         subTopic,
       };
-      if (isEdit) {
-        await editQuestion(data);
-      } else {
-        const response: any = await uploadQuestion(data);
-        if (response?.success) {
-          toast.success("Question Uploaded");
+      try {
+        if (isEdit) {
+          await editQuestion(data);
+        } else {
+          console.log(data)
+          const response: any = await uploadQuestion(data);
+          console.log(response.data)
+          if (response?.success) {
+            toast.success("Question Uploaded");
+          }
+          // setQuestionData((prev) => ({ 
+          //   ...prev,
+          //   type: "single",
+          //   question: "",
+          //   options: [
+          //     { text: "", isCorrect: false },
+          //     { text: "", isCorrect: false },
+          //     { text: "", isCorrect: false },
+          //     { text: "", isCorrect: false },
+          //   ],
+          //   correctAnswer: "",
+          //   marks: 0,
+          //   negativeMarks: 0,
+          //   explanation: "",
+          //   image: "",
+          //   imageExplain: ""}));
         }
+        // onClose();
+      } catch (error) {
+        setIsUploading(false);
+        toast.error("An error occurred during the operation");
+        console.error("Error:", error);
       }
-      onClose();
     }
   };
 
@@ -174,6 +212,7 @@ const QuestionInfoForm: React.FC<Props> = ({
     });
   };
 
+  // File handling for question image
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -182,6 +221,21 @@ const QuestionInfoForm: React.FC<Props> = ({
         setQuestionData((prevData) => ({
           ...prevData,
           image: reader.result as string, // Store the base64 result of the image
+        }));
+      };
+      reader.readAsDataURL(file); // Read file as base64
+    }
+  };
+
+  // File handling for explanation image
+  const handleExplainFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setQuestionData((prevData) => ({
+          ...prevData,
+          imageExplain: reader.result as string, // Store the base64 result of the explanation image
         }));
       };
       reader.readAsDataURL(file); // Read file as base64
@@ -215,10 +269,38 @@ const QuestionInfoForm: React.FC<Props> = ({
     }
   };
 
+  // Explanation image drag and drop handlers
+  const handleExplainDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setDraggingExplain(true);
+  };
+
+  const handleExplainDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setDraggingExplain(false);
+  };
+
+  const handleExplainDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setDraggingExplain(false);
+
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setQuestionData((prevData) => ({
+          ...prevData,
+          imageExplain: reader.result as string,
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div className=" w-[46vw] max-h-[35vw] overflow-scroll p-6 bg-gradient-to-r from-gray-800 to-zinc-900 rounded-xl shadow-lg mb-6 hover:shadow-2xl transition-all duration-300">
       <h2 className="text-2xl text-white font-semibold mb-4">
-        Create New Question
+        {isEdit ? "Edit Question" : "Create New Question"}
       </h2>
 
       {/* Question Type Selection */}
@@ -230,6 +312,7 @@ const QuestionInfoForm: React.FC<Props> = ({
             handleQuestionTypeChange(e.target.value as QuestionType["type"])
           }
           className="w-full p-2 mt-2 rounded-md text-gray-400"
+          disabled={isUploading}
         >
           <option value="single">Single Correct</option>
           <option value="multiple">Multiple Correct</option>
@@ -264,17 +347,18 @@ const QuestionInfoForm: React.FC<Props> = ({
         />
       )}
 
+      {/* Question Image Upload Section */}
       <div>
         <div className="mt-4">
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-            Image (optional)
+            Question Image (optional)
           </label>
           <div
             className={`relative mt-2 border-dashed border-2 p-4 flex items-center justify-center rounded-lg cursor-pointer transition-all ${
               dragging
                 ? "bg-blue-100 dark:bg-blue-800"
                 : "bg-gray-100 dark:bg-gray-700"
-            } hover:border-indigo-500 focus-within:border-indigo-500`}
+            } hover:border-indigo-500 focus-within:border-indigo-500 ${isUploading ? 'opacity-50 pointer-events-none' : ''}`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
@@ -291,18 +375,19 @@ const QuestionInfoForm: React.FC<Props> = ({
               </div>
             ) : (
               <label
-                htmlFor={`file-input`}
+                htmlFor="file-input"
                 className="text-gray-500 dark:text-gray-300 cursor-pointer"
               >
-                Drag and drop or click to upload an image
+                Drag and drop or click to upload a question image
               </label>
             )}
             <input
-              id={`file-input`}
+              id="file-input"
               type="file"
               accept="image/*"
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               onChange={handleFileChange}
+              disabled={isUploading}
             />
           </div>
         </div>
@@ -310,19 +395,80 @@ const QuestionInfoForm: React.FC<Props> = ({
         {questionData?.image && (
           <button
             type="button"
-            className="mt-3 text-sm bg-red-700 p-2 rounded-md text-gray-100 hover:bg-red-600"
+            className={`mt-3 text-sm bg-red-700 p-2 rounded-md text-gray-100 hover:bg-red-600 ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
             onClick={(e) => {
-              e.stopPropagation(); // Prevent the button from triggering the div's onClick
-              setQuestionData((prev) => ({ ...prev, image: "" })); // Remove the image by resetting the image field
+              e.stopPropagation();
+              setQuestionData((prev) => ({ ...prev, image: "" }));
             }}
+            disabled={isUploading}
           >
-            Remove Image
+            Remove Question Image
+          </button>
+        )}
+      </div>
+
+      {/* Explanation Image Upload Section */}
+      <div>
+        <div className="mt-6">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Explanation Image (optional)
+          </label>
+          <div
+            className={`relative mt-2 border-dashed border-2 p-4 flex items-center justify-center rounded-lg cursor-pointer transition-all ${
+              draggingExplain
+                ? "bg-blue-100 dark:bg-blue-800"
+                : "bg-gray-100 dark:bg-gray-700"
+            } hover:border-indigo-500 focus-within:border-indigo-500 ${isUploading ? 'opacity-50 pointer-events-none' : ''}`}
+            onDragOver={handleExplainDragOver}
+            onDragLeave={handleExplainDragLeave}
+            onDrop={handleExplainDrop}
+          >
+            {questionData.imageExplain ? (
+              <div className="flex flex-col gap-4">
+                <img
+                  src={questionData.imageExplain.url || questionData.imageExplain}
+                  alt="Explanation"
+                  height={1200}
+                  width={1800}
+                  className="max-w-full max-h-40 rounded-lg shadow-sm"
+                />
+              </div>
+            ) : (
+              <label
+                htmlFor="explain-file-input"
+                className="text-gray-500 dark:text-gray-300 cursor-pointer"
+              >
+                Drag and drop or click to upload an explanation image
+              </label>
+            )}
+            <input
+              id="explain-file-input"
+              type="file"
+              accept="image/*"
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              onChange={handleExplainFileChange}
+              disabled={isUploading}
+            />
+          </div>
+        </div>
+
+        {questionData?.imageExplain && (
+          <button
+            type="button"
+            className={`mt-3 text-sm bg-red-700 p-2 rounded-md text-gray-100 hover:bg-red-600 ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              setQuestionData((prev) => ({ ...prev, imageExplain: "" }));
+            }}
+            disabled={isUploading}
+          >
+            Remove Explanation Image
           </button>
         )}
       </div>
 
       {/* Marks */}
-      <div className="mb-4">
+      <div className="mb-4 mt-6">
         <label className="text-white text-sm">Marks</label>
         <input
           type="number"
@@ -330,6 +476,7 @@ const QuestionInfoForm: React.FC<Props> = ({
           onChange={(e) => handleFieldChange("marks", parseInt(e.target.value))}
           className="w-full p-2 mt-2 rounded-md text-gray-400"
           placeholder="Enter the marks"
+          disabled={isUploading}
         />
       </div>
       {/* Negative Marks */}
@@ -343,6 +490,7 @@ const QuestionInfoForm: React.FC<Props> = ({
           }
           className="w-full p-2 mt-2 rounded-md text-gray-400"
           placeholder="Enter the negative marks (0 for none)"
+          disabled={isUploading}
         />
       </div>
 
@@ -355,6 +503,7 @@ const QuestionInfoForm: React.FC<Props> = ({
           className="w-full p-2 mt-2 rounded-md text-gray-400"
           placeholder="Enter explanation"
           rows={4}
+          disabled={isUploading}
         />
       </div>
 
@@ -362,16 +511,25 @@ const QuestionInfoForm: React.FC<Props> = ({
         <button
           type="button"
           onClick={onClose}
-          className="px-4 py-2 bg-gray-500 text-white rounded-md"
+          className={`px-4 py-2 bg-gray-500 text-white rounded-md ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
+          disabled={isUploading}
         >
           Cancel
         </button>
         <button
           type="button"
           onClick={handleSubmit}
-          className="px-4 py-2 bg-blue-600 text-white rounded-md"
+          className={`px-4 py-2 bg-blue-600 text-white rounded-md flex items-center justify-center ${isUploading ? 'opacity-80' : 'hover:bg-blue-700'}`}
+          disabled={isUploading}
         >
-          {isEdit ? <>Edit</> : <>Submit</>}
+          {isUploading ? (
+            <>
+              <FaSpinner className="animate-spin mr-2" />
+              {isEdit ? "Updating..." : "Uploading..."}
+            </>
+          ) : (
+            <>{isEdit ? "Update" : "Submit"}</>
+          )}
         </button>
       </div>
     </div>

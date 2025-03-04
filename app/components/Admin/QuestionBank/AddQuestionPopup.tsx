@@ -18,6 +18,7 @@ type Question = {
   type: string;
   question: string;
   image?: any;
+  imageExplain?:any;
   options: { text: string; isCorrect: boolean }[];
   correctAnswer: string | number | string[];
   marks: number;
@@ -31,11 +32,11 @@ type Props ={
   onClose: () => void;
   mappedData:any
   isEdit?:boolean
-  courseId?: string; // Filter by courseId
-  topic?: string; // Filter by topic
-  subTopic?: string; // Filter by subTopic
+  courseId?: string; 
+  topic?: string; 
+  subTopic?: string; 
   type?: string;
-  question?: Question; // Array of questions fetched from the API
+  question?: Question;
   queId?:string;
   refetch?:any;
 }

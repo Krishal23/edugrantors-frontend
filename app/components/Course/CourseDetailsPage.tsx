@@ -46,7 +46,7 @@ const CourseDetailsPage = ({ id }: Props) => {
                                 route={route}
                             />
 
-                            <CourseDetails courseData={data.course} setOpen={setOpen} refetch={refetch}/>
+                            <CourseDetails id={id} setOpen={setOpen} />
 
                         </>
                     ) : (

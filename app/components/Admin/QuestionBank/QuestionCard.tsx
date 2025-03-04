@@ -26,6 +26,7 @@ type Question = {
   type: string;
   question: string;
   image?: any;
+  imageExplain?: any;
   options: { text: string; isCorrect: boolean }[];
   correctAnswer: string | number | string[];
   marks: number;
@@ -177,6 +178,19 @@ const QuestionBank: React.FC<Props> = ({
                 </p>
               </div>
             </div>
+
+
+            {q?.imageExplain?.url && (
+              <div className="mb-3 max-h-[280px] overflow-auto  sm:mb-4">
+                <img
+                  src={q?.imageExplain?.url || "/placeholder.svg"}
+                  alt="Question"
+                  width={500}
+                  height={300}
+                  className="max-w-full rounded"
+                />
+              </div>
+            )}
 
             {/* Explanation */}
             <div className="mt-6 text-sm text-gray-300 space-y-3 mb-2">
