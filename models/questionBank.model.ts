@@ -22,6 +22,10 @@ interface IQuestion extends Document {
     public_id: string;
     url: string;
   };
+  imageExplain?: {
+    public_id: string;
+    url: string;
+  };
   createdBy: IUser;
 }
 
@@ -71,6 +75,14 @@ const questionBankSchema = new Schema<IQuestion>({
   },
   explanation: { type: String },
   image: { 
+      public_id: {
+          type: String
+      },
+      url: {
+          type: String
+      }
+  },
+  imageExplain: { 
       public_id: {
           type: String
       },

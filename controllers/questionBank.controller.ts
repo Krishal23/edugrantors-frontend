@@ -10,6 +10,9 @@ import cloudinary from "cloudinary";
 export const uploadQuestion = CatchAsyncErrror(async (req: Request, res: Response, next: NextFunction) => {
     try {
         const data = req.body;
+        console.log(data)
+
+        
         if (!data.courseId) {
             return next(new ErrorHandler("courseId is required.", 400));
         }
@@ -30,6 +33,16 @@ export const uploadQuestion = CatchAsyncErrror(async (req: Request, res: Respons
                 url: myCloud.secure_url,
             }
         }
+        const imageExplain = data.imageExplain;
+        if (imageExplain) {
+            const myCloud = await cloudinary.v2.uploader.upload(imageExplain, {
+                folder: "questionsExplanation",
+            });
+            data.imageExplain = {
+                public_id: myCloud.public_id,
+                url: myCloud.secure_url,
+            }
+        }
 
 
         if (data.type === "single" || data.type === "multiple") {
@@ -38,11 +51,15 @@ export const uploadQuestion = CatchAsyncErrror(async (req: Request, res: Respons
             }
         }
         const question = await QuestionBank.create(data);
+        console.log(question)
 
         res.status(201).json({
             success: true,
-            message: "Question uploaded successfully.",
+            message: "Question uploaded successfullyy.",
             question,
+            data,
+            image,
+            imageExplain
         });
     } catch (error: any) {
         return next(new ErrorHandler(error.message, 500));

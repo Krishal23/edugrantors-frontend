@@ -19,6 +19,10 @@ interface IQuestion extends Document {
     public_id: string;
     url: string;
   };
+  imageExplain?: {
+    public_id: string;
+    url: string;
+  };
   createdBy?: IUser;
   topic?: string;
   subTopic?: string; // Optional sub-topic
@@ -62,6 +66,14 @@ const questionSchema = new Schema<IQuestion>({
     url: {
       type: String,
     },
+  },
+  imageExplain: {
+    public_id: {
+      type: String
+    },
+    url: {
+      type: String
+    }
   },
   topic: {
     type: String,

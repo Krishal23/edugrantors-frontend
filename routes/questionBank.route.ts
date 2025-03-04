@@ -8,7 +8,7 @@ questionBankRouter.post(
     "/upload-question",
     updateAccessToken,
     isAuthenticated,
-    authorizeRoles("teacher"),
+    // authorizeRoles("teacher"),
     uploadQuestion
 );
 
