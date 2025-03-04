@@ -1,40 +1,40 @@
-import React, { useState } from "react";
-import dynamic from "next/dynamic";
-import Loader from "@/app/components/Loader/Loader";
+"use client"
 
+import type React from "react"
+import { useState } from "react"
+import dynamic from "next/dynamic"
+import Loader from "@/app/components/Loader/Loader"
 
-const QuestionCard = dynamic(() => import('./QuestionCard'), {
+const QuestionCard = dynamic(() => import("./QuestionCard"), {
   loading: () => <Loader message="Loading Terms and Conditions..." />,
-});
-
-
+})
 
 interface Question {
-  _id: string;
-  question: string;
-  courseId: string;
-  topic: string;
-  subTopic: string;
-  type: string;
-  marks: number;
-  negativeMarks: number;
-  explanation: string;
-  options: { text: string; isCorrect: boolean }[];
-  correctAnswer: string | string[];
-  image?: { url: string };
+  _id: string
+  question: string
+  courseId: string
+  topic: string
+  subTopic: string
+  type: string
+  marks: number
+  negativeMarks: number
+  explanation: string
+  options: { text: string; isCorrect: boolean }[]
+  correctAnswer: string | string[]
+  image?: { url: string }
 }
 
 interface Props {
-  data: Question[];
-  courseId: string;
-  topic: string;
-  subTopic: string;
-  type: string;
+  data: Question[]
+  courseId: string
+  topic: string
+  subTopic: string
+  type: string
 }
 
 const QuestionsList: React.FC<Props> = ({ data, courseId, topic, subTopic, type }) => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const questionsPerPage = 5;
+  const [currentPage, setCurrentPage] = useState(1)
+  const questionsPerPage = 5
   console.log(data)
 
   const filteredQuestions = data.filter(
@@ -42,24 +42,33 @@ const QuestionsList: React.FC<Props> = ({ data, courseId, topic, subTopic, type 
       (!courseId || question.courseId === courseId) &&
       (!topic || question.topic === topic) &&
       (!subTopic || question.subTopic === subTopic) &&
-      (!type || question.type === type)
-  );
+      (!type || question.type === type),
+  )
 
-  const totalPages = Math.ceil(filteredQuestions.length / questionsPerPage);
+  const totalPages = Math.ceil(filteredQuestions.length / questionsPerPage)
   const paginatedQuestions = filteredQuestions.slice(
     (currentPage - 1) * questionsPerPage,
-    currentPage * questionsPerPage
-  );
-console.log(paginatedQuestions)
-  
+    currentPage * questionsPerPage,
+  )
+  console.log(paginatedQuestions)
+
+  // Function to handle page changes from child component
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage)
+    }
+  }
 
   return (
-    <div className=" dark:bg-gray-900 dark:text-gray-100 p-6">
+    <div className="dark:bg-gray-900 dark:text-gray-100 p-6">
       <QuestionCard
-        // key={question._id}
         questions={paginatedQuestions}
+        allQuestions={filteredQuestions}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        questionsPerPage={questionsPerPage}
+        onPageChange={handlePageChange}
       />
-    
 
       <div className="flex justify-between items-center mt-6">
         <button
@@ -81,7 +90,8 @@ console.log(paginatedQuestions)
         </button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default QuestionsList;
+export default QuestionsList
+
