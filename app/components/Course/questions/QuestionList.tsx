@@ -8,9 +8,13 @@ type Props = {
   user: any
   setQuestionId: (id: string) => void
   answerCreationLoading: boolean
+  courseId:any
+  contentId:any
+  refetch?:any
 }
 
-const QuestionList = ({ data, activeVideo, handleAnswerSubmit, user, setQuestionId, answerCreationLoading }: Props) => {
+
+const QuestionList = ({ data,refetch, activeVideo, handleAnswerSubmit, user, setQuestionId, answerCreationLoading,courseId,contentId }: Props) => {
   return (
     <div className="w-full mb-auto p-4 rounded-lg shadow-lg">
       <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-200 flex items-center gap-2">
@@ -25,6 +29,9 @@ const QuestionList = ({ data, activeVideo, handleAnswerSubmit, user, setQuestion
             handleAnswerSubmit={handleAnswerSubmit}
             setQuestionId={setQuestionId}
             answerCreationLoading={answerCreationLoading}
+            courseId={courseId}
+            contentId={contentId}
+            refetch={refetch}
           />
         ))}
       </div>

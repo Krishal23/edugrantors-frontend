@@ -101,6 +101,23 @@ export const courseAPi = apiSlice.injectEndpoints({
                 credentials: "include" as const,
             })
         }),
+        deleteComment: builder.mutation({
+            query: ({ courseId,contentId, questionId }) => ({
+              url: `/delete-comment`,
+              method: "PUT",
+              credentials: "include",
+              body: { courseId,contentId, questionId }, 
+            }),
+          }),
+        deleteAnswer: builder.mutation({
+            query: ({ courseId, contentId, questionId, answerId }) => ({
+              url: `/delete-answer`,
+              method: "PUT",
+              credentials: "include",
+              body: { courseId, contentId, questionId, answerId }, 
+            }),
+          }),
+          
         getQuizzes: builder.query({
             query: (courseId) => ({
                 url: `get-all-tests/${courseId}`,
@@ -228,5 +245,7 @@ export const {
     useAddCouponMutation,
     useGetCouponsQuery,
     useValidateCouponMutation,
-    useGetCourseDetailsAdminQuery
+    useGetCourseDetailsAdminQuery,
+    useDeleteCommentMutation,
+    useDeleteAnswerMutation
 } = courseAPi;

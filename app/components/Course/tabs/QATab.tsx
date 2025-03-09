@@ -12,6 +12,9 @@ type Props = {
   handleAnswerSubmit: (answer: string, questionId: string) => void
   setQuestionId: (id: string) => void
   answerCreationLoading: boolean
+  courseId:any
+  contentId:any
+  refetch?:any
 }
 
 const QATab = ({
@@ -25,7 +28,11 @@ const QATab = ({
   handleAnswerSubmit,
   setQuestionId,
   answerCreationLoading,
+  courseId,
+  contentId,
+  refetch
 }: Props) => {
+  console.log("fg",courseId,"esb",contentId)
   return (
     <div className="min-h-[10vh] text-zinc-800 dark:text-white">
       <QuestionForm
@@ -45,6 +52,9 @@ const QATab = ({
           user={user}
           setQuestionId={setQuestionId}
           answerCreationLoading={answerCreationLoading}
+          courseId={courseId}
+          contentId={contentId}
+          refetch={refetch}
         />
       </div>
     </div>

@@ -30,6 +30,7 @@ const CourseContentMedia = ({ data, id, activeVideo, setActiveVideo, user, refet
   const [question, setQuestion] = useState("")
   const [questionId, setQuestionId] = useState("")
 
+
   const [addNewQuestion, { isSuccess, error, isLoading: questionCreationLoading }] = useAddNewQuestionMutation()
 
   const [addAnswerInQuestion, { isSuccess: answerSuccess, error: answerError, isLoading: answerCreationLoading }] =
@@ -61,11 +62,11 @@ const CourseContentMedia = ({ data, id, activeVideo, setActiveVideo, user, refet
     if (isSuccess) {
       setQuestion("")
       refetch()
-      toast.success("Question added successfully")
+      // toast.success("Question added successfully")
     }
     if (answerSuccess) {
       refetch()
-      toast.success("Answer added successfully")
+      // toast.success("Answer added successfully")
     }
     if (error && "data" in error) {
       const errorMessage = error as any
@@ -105,7 +106,10 @@ const CourseContentMedia = ({ data, id, activeVideo, setActiveVideo, user, refet
           activeVideo={activeVideo}
           handleAnswerSubmit={handleAnswerSubmit}
           setQuestionId={setQuestionId}
+          courseId={id}
+          contentId={currentContent._id}
           answerCreationLoading={answerCreationLoading}
+          refetch={refetch}
         />
       )}
 
