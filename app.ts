@@ -47,6 +47,13 @@ app.use(
   questionBankRouter
 );
 
+app._router.stack.forEach((r: any) => {
+  if (r.route && r.route.path) {
+    console.log(`Registered Route: ${r.route.path}`);
+  }
+});
+
+
 // Testing API
 app.get("/test", (req: Request, res: Response, next: NextFunction) => {
   res.status(200).json({

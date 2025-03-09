@@ -338,6 +338,7 @@ export const updateAccessToken = CatchAsyncErrror(
       }
 
       const user = JSON.parse(session);
+      console.log(user)
 
       // Generate new tokens
       const accessToken = jwt.sign(
@@ -380,7 +381,7 @@ export const getUserInfo = CatchAsyncErrror(
 
       // Fetch user data (this should not send a response)
       const user = await getUserById(userId); // Assuming this function returns user data instead of sending a response
-
+      console.log(user)
       // Send the response with user info
       return res.status(200).json({
         success: true,

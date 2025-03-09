@@ -7,6 +7,7 @@ import {
   addReview,
   attemptQuiz2,
   createQuiz,
+  deleteAnswer,
   deleteCourse,
   deleteQuestion,
   editCourse,
@@ -134,7 +135,19 @@ courseRouter.put(
   isAuthenticated,
   addQuestion
 );
-courseRouter.put("/add-answer", updateAccessToken, isAuthenticated, addAnswer);
+courseRouter.put(
+  "/add-answer",
+  updateAccessToken,
+  isAuthenticated,
+  addAnswer
+);
+courseRouter.put(
+  "/delete-answer",
+  updateAccessToken,
+  isAuthenticated,
+  deleteAnswer
+);
+// courseRouter.put("/add-answer", updateAccessToken, isAuthenticated, addAnswer);
 courseRouter.put(
   "/add-review/:id",
   updateAccessToken,

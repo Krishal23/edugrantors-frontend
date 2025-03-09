@@ -52,21 +52,32 @@ export const editCourse = CatchAsyncErrror(
       const thumbnail = data.thumbnail;
       const courseId = req.params.id;
 
-      const courseData = (await CourseModel.findById(courseId)) as any;
+      const courseData = await CourseModel.findById(courseId);
       if (!courseData) {
         return next(new ErrorHandler("Course not found", 404));
       }
 
+      console.log("gsad", data, "agr");
+
+      // Convert Mongoose Document to a Plain Object to avoid issues
+      let courseDataPlain = courseData.toObject();
+
+      // Ensure courseData remains an array
+      data.courseData = Array.isArray(courseDataPlain.courseData)
+        ? courseDataPlain.courseData.map((section, index) => ({
+            ...section,
+            ...(data.courseData?.[index] || {}), // Update only provided indices
+            questions: section.questions || [], // Ensure questions remain unchanged
+          }))
+        : courseDataPlain.courseData;
+
+      console.log("gesar", data, "thr");
+
       // Check if there's a thumbnail to update
       if (thumbnail) {
         if (!thumbnail.startsWith("https")) {
-          // Check for existing thumbnail before attempting to destroy
-          if (courseData.thumbnail && courseData.thumbnail.public_id) {
-            await cloudinary.v2.uploader.destroy(
-              courseData.thumbnail.public_id
-            );
-          } else {
-            console.log("No existing thumbnail to destroy");
+          if (courseData.thumbnail?.public_id) {
+            await cloudinary.v2.uploader.destroy(courseData.thumbnail.public_id);
           }
 
           const myCloud = await cloudinary.v2.uploader.upload(thumbnail, {
@@ -78,10 +89,7 @@ export const editCourse = CatchAsyncErrror(
             url: myCloud.secure_url,
           };
         } else {
-          data.thumbnail = {
-            public_id: courseData.thumbnail.public_id,
-            url: courseData.thumbnail.url,
-          };
+          data.thumbnail = courseData.thumbnail;
         }
       }
 
@@ -90,6 +98,8 @@ export const editCourse = CatchAsyncErrror(
         { $set: data },
         { new: true }
       );
+
+      console.log("tet", course?.courseData, "aer");
 
       if (!course) {
         return next(new ErrorHandler("Failed to update course", 500));
@@ -104,6 +114,8 @@ export const editCourse = CatchAsyncErrror(
     }
   }
 );
+
+
 
 export const addCoupons = CatchAsyncErrror(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -1161,7 +1173,7 @@ export const getCourseByUser = CatchAsyncErrror(
 
       const userCourseList = user.courses;
       const courseId = req.params.id;
-      console.log("User's courses:", userCourseList);
+      console.log("User'ss courses:", userCourseList);
 
       // Check if course exists in user's courses
       const courseExists = userCourseList?.find(
@@ -1245,7 +1257,7 @@ export const addQuestion = CatchAsyncErrror(
 interface IAddAnswerData {
   answer: string;
   courseId: string;
-  contentId: string;
+  contentId: any;
   questionId: string;
 }
 
@@ -1256,13 +1268,13 @@ export const addAnswer = CatchAsyncErrror(
         req.body as IAddAnswerData;
       // Step 1: Fetch course by ID
       const course = await CourseModel.findById(courseId);
-      if (!mongoose.Types.ObjectId.isValid(contentId)) {
+      if (!mongoose.Types.ObjectId.isValid(contentId?._id)) {
         return next(new ErrorHandler("Invalid contentId", 400));
       }
 
       // Step 2: Locate the content inside the course
       const courseContent = course?.courseData?.find((item: any) =>
-        item._id.equals(contentId)
+        item._id.equals(contentId?._id)
       );
 
       if (!courseContent) {
@@ -1352,6 +1364,74 @@ export const addAnswer = CatchAsyncErrror(
     }
   }
 );
+
+// delete answer
+export const deleteAnswer = CatchAsyncErrror(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { courseId, contentId, questionId, answer } = req.body;
+      console.log(req.body)
+
+      // Step 1: Fetch course by ID
+      const course = await CourseModel.findById(courseId);
+
+
+      // Step 2: Locate the content inside the course
+      const courseContent = course?.courseData?.find((item: any) => 
+        new mongoose.Types.ObjectId(contentId).equals(item._id)
+      );
+      
+
+      if (!courseContent) {
+        return next(new ErrorHandler("Invalid contentId", 400));
+      }
+
+      // Step 3: Locate the specific question within the content
+      const question = courseContent?.questions?.find((item: any) =>
+      {
+
+        item._id.equals(questionId)
+      }
+      );
+      if (!question) {
+        return next(new ErrorHandler("Invalid questionId", 400));
+      }
+
+      // Step 4: Find the answer within the question replies
+      const answerIndex = question.questionReplies.findIndex((reply: any) =>
+        reply.answer === answer && reply.user._id.toString() === req.user?.id.toString()
+      );
+      if (answerIndex === -1) {
+        return next(new ErrorHandler("Answer not found or unauthorized", 400));
+      }
+
+      // Step 5: Authorization - Ensure only the answer owner, teacher, or admin can delete
+      if (
+        question.questionReplies[answerIndex].user._id.toString() !==
+          req.user?._id.toString() &&
+        req.user?.role !== "admin" &&
+        req.user?.role !== "teacher"
+      ) {
+        return next(new ErrorHandler("Not authorized to delete this answer", 403));
+      }
+
+      // Step 6: Remove the answer from the array
+      question.questionReplies.splice(answerIndex, 1);
+
+      // Step 7: Save the updated course document
+      await course?.save();
+
+      // Step 8: Send response back to the client
+      res.status(200).json({
+        success: true,
+        message: "Answer deleted successfully",
+      });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  }
+);
+
 
 //add reviews in course
 interface IAddReviewData {
