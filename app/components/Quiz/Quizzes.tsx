@@ -22,7 +22,7 @@ const Quizzes = ({id,user}: Props) => {
 
     
     return (
-        <div className="pb-6 min-h-[10vh] rounded-lg shadow-lg space-y-6">
+        <div className="pb-6 min-h-[10vh] rounded-lg shadow-lg space-y-6 mb-40">
             <h2 className="text-2xl font-semibold text-center text-gray-800 dark:text-gray-300">Quizzes for Course</h2>
             <div>
                 {data?.selectedQuizzes?.map((quiz: any, index: number) => {
