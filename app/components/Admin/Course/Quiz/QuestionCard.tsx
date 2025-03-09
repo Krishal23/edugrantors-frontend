@@ -53,13 +53,16 @@ const QuestionCard: React.FC<QuestionProps> = ({
       </div>
       <hr />
       {image && (
+        <div className="overflow-scroll">
+
         <img
           src={image?.url}
           alt="img loading..."
           height={1200}
           width={1800}
           className="max-w-[80vw] sm:h-48 xxs:h-16 object-cover rounded-lg m-4"
-        />
+          />
+          </div>
       )}
 
       {/* Options */}

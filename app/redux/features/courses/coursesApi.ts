@@ -161,6 +161,14 @@ export const courseAPi = apiSlice.injectEndpoints({
             })
 
         }),
+        getUsersMarksAdmin: builder.query({
+            query: ({courseId,quizId}) => ({
+                url: `get-users-test-details/${courseId}/${quizId}`,
+                method: "GET",
+                credentials: "include" as const,
+            })
+
+        }),
         getCoupons: builder.query({
             query: ({courseId}) => ({
                 url: `get-coupons/${courseId}`,
@@ -247,5 +255,6 @@ export const {
     useValidateCouponMutation,
     useGetCourseDetailsAdminQuery,
     useDeleteCommentMutation,
-    useDeleteAnswerMutation
+    useDeleteAnswerMutation,
+    useGetUsersMarksAdminQuery
 } = courseAPi;

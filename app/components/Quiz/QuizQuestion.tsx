@@ -301,7 +301,7 @@ const QuizQuestion = ({
           />
         )}
       </div>
-      <div className=" min-w-1/5 ">
+      <div className=" min-w-1/5  ">
         <QuizSidebar
           currentQuestionIndex={currentQuestionIndex}
           answers={answers}

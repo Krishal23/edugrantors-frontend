@@ -9,9 +9,9 @@ type SubmitPopupProps = {
 const SubmitPopup = ({ answers, onClose, onConfirm }: SubmitPopupProps) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white w-4/5 max-w-md rounded-lg shadow-lg p-6 space-y-4">
+      <div className="bg-white w-4/5 max-w-md   rounded-lg shadow-lg p-6 space-y-4">
         <h3 className="text-xl font-semibold text-gray-800">Review Your Answers</h3>
-        <ul className="space-y-3">
+        <ul className="space-y-3 max-h-[60vh] overflow-y-scroll">
           {answers.map((answer, index) => (
             <li key={index} className="bg-gray-100 p-3 rounded-lg">
               <p className="font-medium text-gray-900 ">Question {index + 1}:</p>

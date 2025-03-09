@@ -10,6 +10,7 @@ import {
 } from "react-icons/fa";
 import {
   useAddCouponMutation,
+  useGetUsersMarksAdminQuery,
   useToggleCoursePublicityMutation,
   useUpdateTestMutation,
 } from "@/app/redux/features/courses/coursesApi";
@@ -20,6 +21,7 @@ import toast from "react-hot-toast";
 import { useLoadUserQuery } from "@/app/redux/features/api/apiSlice";
 import dynamic from "next/dynamic";
 import Loader from "../../Loader/Loader";
+import QuizList from "./QuizList";
 
 const CouponPop = dynamic(() => import("./CouponPop"), {
   ssr: false,
@@ -52,6 +54,9 @@ const CourseDetails = ({ courseData, refetch, teacher }: Props) => {
   const [updateTest] = useUpdateTestMutation();
   const [toggleCoursePublicity] = useToggleCoursePublicityMutation();
   const [addCoupon, { isSuccess, error }] = useAddCouponMutation();
+
+  // const { data:quizData, isLoading, isError } = useGetUsersMarksAdminQuery({}); // Pass id to the query
+
 
   const [couponPop, setCouponPop] = useState(false);
   const [isPublic, setIsPublic] = useState(courseData?.isPublic);
@@ -123,6 +128,8 @@ const CourseDetails = ({ courseData, refetch, teacher }: Props) => {
     setShowConfirmationPopup(false);
   };
 
+
+  console.log(courseData?.quizzes)
   return (
     <div
       className={` flex-col-reverse  text-zinc-800 dark:text-white justify-center w-[900px] ml-[2rem] p-8 my-24 rounded-lg shadow-lg ${containerClass}`}
@@ -348,110 +355,12 @@ const CourseDetails = ({ courseData, refetch, teacher }: Props) => {
         </div>
       </div>
 
-      {/* Quizzes */}
+  
+      
 
-      <div className="mt-8">
-        <h2 className={`text-2xl font-semibold ${titleClass} mb-6 text-white`}>
-          Quizzes
-        </h2>
-        <div className="flex-row">
-          {courseData?.quizzes?.map((quiz: any, index: number) => (
-            <div
-              key={index}
-              className="relative p-3 mb-2  border border-gray-700 rounded-lg shadow-xl bg-gradient-to-br from-transparent to-indigo-950 text-white transform hover:scale-105 transition-transform duration-300"
-            >
-              <div className="flex  justify-between items-center mb-3">
-                <h3 className="text-lg font-semibold ">{`Quiz ${index + 1}: ${
-                  quiz.title || "Unnamed"
-                }`}</h3>
-                {quiz?.isLive && <MdOnlinePrediction color="green" size={30} />}
-              </div>
-              <div className="flex gap-3 justify-between">
-                <p className="text-sm text-gray-200 w-[480px] h-[40px] overflow-hidden">
-                  {quiz.description}
-                </p>
-                <div className="flex gap-2">
-                  <Link
-                    href={`/admin/quiz/${courseData._id}/${quiz._id}`}
-                    className="flex gap-2 border  px-6 py-3 text-sm font-semibold text-center  from-indigo-700 to-indigo-800 text-white rounded-full shadow-lg hover:bg-indigo-400 transition-all"
-                  >
-                    <SiQuizlet className="text-gray-400" size={20} />
-                    Open Quiz
-                  </Link>
-                  {!quiz?.isLive ? (
-                    <>
-                      <Link
-                        href={`/admin/edit-quiz/${courseData._id}/${quiz._id}`}
-                        className="flex gap-2 border  px-6 py-3 text-sm font-semibold text-center  from-indigo-700 to-indigo-800 text-white rounded-full shadow-lg hover:bg-indigo-400 transition-all"
-                      >
-                        <MdEditSquare className="text-gray-400" size={20} />
-                        Edit Quiz
-                      </Link>
-                      <button
-                        onClick={() =>
-                          setQuizLive(courseData._id, quiz._id, true)
-                        }
-                        className="flex gap-2 border  px-6 py-3 text-sm font-semibold text-center  from-indigo-700 to-indigo-800 text-white rounded-full shadow-lg hover:bg-indigo-400 transition-all"
-                      >
-                        <GrSend className="text-gray-400" size={20} />
-                        Live Quiz
-                      </button>
-                    </>
-                  ) : (
-                    <button
-                      onClick={() =>
-                        setQuizLive(courseData._id, quiz._id, false)
-                      }
-                      // onClick={() => setShowConfirmationPopup({ quizId: quiz._id, action: "archive" })}
-                      className="flex gap-2 border px-6 py-3 text-sm font-semibold text-center from-red-700 to-red-800 text-white rounded-full shadow-lg hover:bg-red-500 transition-all"
-                    >
-                      <FaArchive className="text-gray-400" size={20} />
-                      Archive Quiz
-                    </button>
-                  )}
-                  {/* {showConfirmationPopup && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                      <div className="p-6 bg-gray-800 text-white rounded-lg shadow-lg">
-                        <h3 className="text-lg font-semibold mb-4">
-                          Are you sure you want to{" "}
-                          <span className="font-bold">
-                            {showConfirmationPopup.action === "archive" ? "Archive" : "Go Live"}
-                          </span>{" "}
-                          this quiz?
-                        </h3>
-                        <div className="flex justify-end gap-4">
-                          <button
-                            onClick={() => setShowConfirmationPopup(false)}
-                            className="px-4 py-2 bg-gray-500 rounded-lg hover:bg-gray-600 transition-all"
-                          >
-                            Cancel
-                          </button>
-                          <button
-                            onClick={async () => {
-                              if (showConfirmationPopup.action === "archive") {
-                                await updateTest({
-                                  courseId: courseData._id,
-                                  quizId: showConfirmationPopup.quizId,
-                                  isLive: false,
-                                });
-                              }
-                              refetch();
-                              setShowConfirmationPopup(false);
-                            }}
-                            className="px-4 py-2 bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-all"
-                          >
-                            Confirm
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  )} */}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+      <QuizList courseData={courseData} setQuizLive={setQuizLive}/>
+
+
 
       {/* Metadata */}
       <div className="mt-8">

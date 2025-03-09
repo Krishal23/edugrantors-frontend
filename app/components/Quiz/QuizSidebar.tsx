@@ -61,11 +61,11 @@ const QuizSidebar = ({ currentQuestionIndex, answers, quiz, onQuestionSelect, ha
           boxShadow: '4px 0 10px rgba(0, 0, 0, 0.4)',
         }}
       >
-        <div className="flex flex-col justify-between h-full">
+        <div className="flex flex-col justify-between ">
           <div>
-            <h3 className="mb-4 text-lg font-bold">QUIZ OVERVIEW</h3>
+            <h3 className="mb-4 text-lg  font-bold">QUIZ OVERVIEW</h3>
             <div
-              className="grid grid-cols-auto-fit gap-2"
+              className="grid grid-cols-auto-fit gap-2 max-h-[75vh] overflow-y-scroll"
               style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(40px, 1fr))' }}
             >
               {quiz.questions.map((question, index) => {

@@ -39,7 +39,7 @@ const QuizReview = ({ quizId, courseId }: Props) => {
   
   return (
     <div className="flex">
-      <div className="flex-1 p-6 min-w-screen overflow-x-scrollspace-y-6">
+      <div className="flex-1 p-6 min-w-screen overflow-x-scroll space-y-6">
         <ReviewHeader 
         courseId={courseId} 
         title= {title}

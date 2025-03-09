@@ -31,7 +31,7 @@ const QuizStart = ({ quizId, courseId }: Props) => {
   return (
     <>
       {!startQuiz ? (
-        <div className="flex min-h-screen border-2 border-red-950 text-black dark:text-white flex-col items-center justify-center space-y-4 py-8">
+        <div className="flex min-h-screen text-black dark:text-white flex-col items-center justify-center space-y-4 py-8">
           <div className="max-w-md sm:w-full w-[80vw] flex flex-col justify-center items-center bg-white text-black p-6 rounded-lg shadow-md">
             <h1 className="text-2xl font-semibold text-center mb-4">{quiz?.title}</h1>
             <p className="text-lg text-center mb-4">{quiz?.description}</p>
