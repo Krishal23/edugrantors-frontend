@@ -1,5 +1,5 @@
 
-// Types
+
 enum QuestionType {
     Single = "single",
     Multiple = "multiple",
@@ -19,7 +19,7 @@ enum QuestionType {
   }
   
 
-// Utility function
+
 function EvaluateAnswer(question: Question, selectedOption: any): { isCorrect: boolean; userAnswer: string } {
   const { type, correctAnswer, options } = question
   let isCorrect = false

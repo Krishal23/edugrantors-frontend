@@ -7,7 +7,7 @@ const usePreventBackNavigation = () => {
       history.pushState(null, "", location.href); 
     };
 
-    const warnBeforeUnload = (event) => {
+    const warnBeforeUnload = (event:BeforeUnloadEvent) => {
       event.preventDefault();
       event.returnValue = "";
     };

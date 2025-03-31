@@ -1,4 +1,4 @@
-export function reorganizeQuizData(quizId: any, courseId: any, quiz: any, responses: any) {
+export function reorganizeQuizData(quizId:string, courseId: string, quiz: any, responses: any) {
     const maxMarks = quiz.questions.reduce((acc: any, question: any) => acc + question.marks, 0);
     let marksScored = 0;
     let totalQuestionsAttempted = 0;

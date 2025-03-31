@@ -1,5 +1,5 @@
 'use client'
-import React, { FC, useState } from "react";
+import React, { useState } from "react";
 import dynamic from "next/dynamic";
 import Heading from "./utils/Heading";
 import Header from "./components/Header";
@@ -21,12 +21,6 @@ const FAQ = dynamic(() => import("./components/FAQ/FAQ"), {
 const Footer = dynamic(() => import("./components/Footer"), {
   loading: () => <Loader message="Loading Footer"/>,
 });
-
-interface Props {
-  title?: string;
-  description?: string;
-  keywords?: string;
-}
 
 
 const Page = () => {

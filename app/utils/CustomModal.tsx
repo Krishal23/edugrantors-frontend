@@ -14,7 +14,7 @@ type Props = {
 };
 
 const CustomModal: FC<Props> = ({ open, setOpen, component: Component, setRoute,isResend,setIsResend,submissionDataStore, setSubmissionDataStore}) => {
-    if (!open) return null; // Only render the modal when 'open' is true
+    if (!open) return null;
 
     
     return (

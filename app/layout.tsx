@@ -7,7 +7,8 @@ import { Providers } from '../app/Provider';
 import { SessionProvider } from 'next-auth/react';
 import { useLoadUserQuery } from './redux/features/api/apiSlice';
 import Loader from './components/Loader/Loader';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -23,9 +24,7 @@ const josefin = Josefin_Sans({
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
       <body
@@ -34,7 +33,7 @@ export default function RootLayout({
         <Providers>
           <SessionProvider>
             <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-              <Custom>{children}</Custom>
+              <CustomLoader>{children}</CustomLoader>
               <Toaster position="top-center" reverseOrder={false} />
             </ThemeProvider>
           </SessionProvider>
@@ -44,14 +43,16 @@ export default function RootLayout({
   );
 }
 
-const Custom: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const {isLoading } = useLoadUserQuery({});
+const CustomLoader: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { isLoading } = useLoadUserQuery({});
+  const pathname = usePathname();
+  const [loading, setLoading] = useState(false);
 
-  return(
-    <>
-      {
-        isLoading ? <Loader/> : <>{children} </>
-      }
-    </>
-  )
+  useEffect(() => {
+    setLoading(true);
+    const timeout = setTimeout(() => setLoading(false), 700); // Simulate a small delay
+    return () => clearTimeout(timeout);
+  }, [pathname]); 
+
+  return isLoading || loading ? <Loader /> : <>{children}</>;
 };

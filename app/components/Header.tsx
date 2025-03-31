@@ -53,13 +53,6 @@ const Header: FC<Props> = ({ open, setOpen, activeItem, route, setRoute }) => {
   const [itemActive, setItemActive] = useState(activeItem);
   const { theme } = useTheme();
 
-  // toast.error(`${isResend}qwerw`)
-  // useEffect(()=>{
-
-  //     setIsResend(true)
-  // },[setIsResend])
-  // // toast.error(`${isResend}yrt`)
-
   useEffect(() => {
     if (!user) {
       if (data) {
