@@ -1,23 +1,24 @@
 'use client'
 import React, { FC, useState, useEffect } from 'react';
 import { useLogOutQuery } from '../../redux/features/auth/authApi';
-import { signOut } from "next-auth/react"
+import { signOut } from "next-auth/react";
 import Loader from '../Loader/Loader';
 import dynamic from 'next/dynamic';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { userLoggedOut } from '../../redux/features/auth/authSlice'; 
 
 const EnrolledCourses = dynamic(() => import('./EnrolledCourses'), {
-    loading: () => <Loader message='Loading Courses...'/>,
-  });
+    loading: () => <Loader message='Loading Courses...' />,
+});
 const UpdatePassword = dynamic(() => import('./UpdatePassword'), {
-    loading: () => <Loader message='Loading, please wait...'/>,
-  });
+    loading: () => <Loader message='Loading, please wait...' />,
+});
 const SideBarProfile = dynamic(() => import('./SideBarProfile'), {
-    loading: () => <Loader message='Loading Sidebar...'/>,
-  });
+    loading: () => <Loader message='Loading Sidebar...' />,
+});
 const ProfileInfo = dynamic(() => import('./ProfileInfo'), {
-    loading: () => <Loader message='Loading Profile...'/>,
-  });
+    loading: () => <Loader message='Loading Profile...' />,
+});
 
 type Props = {};
 
@@ -28,15 +29,37 @@ const Profile: FC<Props> = () => {
     const [logout, setLogout] = useState(false);
 
     const { user } = useSelector((state: any) => state.auth);
-    
+    const dispatch = useDispatch(); 
+
+    const clearCache = () => {
+        if ('caches' in window) {
+            caches.keys().then((cacheNames) => {
+                cacheNames.forEach((cacheName) => {
+                    caches.delete(cacheName);
+                });
+            });
+        }
+    };
+
+    useEffect(() => {
+        if (user) {
+            console.log("User data:", user);
+        }
+    }, [user]);  
 
     const { } = useLogOutQuery(undefined, {
         skip: !logout ? true : false,
     });
 
     const logOutHandler = async () => {
-        setLogout(true);
-        await signOut();
+        try {
+            setLogout(true);
+            await signOut({ redirect: false });  
+            clearCache();  
+            dispatch(userLoggedOut()); 
+        } catch (error) {
+            console.error("Error during logout:", error);
+        }
     };
 
     useEffect(() => {
@@ -51,15 +74,14 @@ const Profile: FC<Props> = () => {
         window.addEventListener('scroll', handleScroll);
 
         return () => {
-            window.removeEventListener('scroll', handleScroll); // Clean up to prevent memory leak
+            window.removeEventListener('scroll', handleScroll); 
         };
     }, []);
 
     return (
         <div className="flex w-[85%] mx-auto">
             <div
-                className={`w-[30vw]  h-[450px] bg-slate-900 bg-opacity-90 shadow-xl dark:shadow-lg rounded-[25px] shadow-sm mt-[60px] mr-4 mb-[80px] sticky transition-all duration-300 ${scroll ? "top-[110px]" : "top-[30px]"
-                    } left-[30px]`}
+                className={`w-[30vw] h-[450px] bg-slate-900 bg-opacity-90 shadow-xl dark:shadow-lg rounded-[25px] shadow-sm mt-[60px] mr-4 mb-[80px] sticky transition-all duration-300 ${scroll ? "top-[110px]" : "top-[30px]"} left-[30px]`}
             >
                 <SideBarProfile
                     user={user}
@@ -69,36 +91,24 @@ const Profile: FC<Props> = () => {
                     logOutHandler={logOutHandler}
                 />
             </div>
-            {
-                active === 1 && (
-                    <div
-                        className=" w-[50vw]  h-full bg-transparent mt-[70px] "
-                    >
-                        <ProfileInfo
-                            avatar={avatar}
-                            user={user}
-                        />
-                    </div>
-                )
-            }
-            {
-                active === 2 && (
-                    <div
-                    className=" w-[50vw]  h-full bg-transparent mt-[70px] "
-                    >
-                        <EnrolledCourses/>
-                    </div>
-                )
-            }
-            {
-                active === 3 && (
-                    <div
-                        className=" w-[50vw]   h-full bg-transparent mt-[70px] "
-                    >
-                        <UpdatePassword/>
-                    </div>
-                )
-            }
+
+            {active === 1 && (
+                <div className=" w-[50vw]  h-full bg-transparent mt-[70px] ">
+                    <ProfileInfo avatar={avatar} user={user} />
+                </div>
+            )}
+
+            {active === 2 && (
+                <div className=" w-[50vw]  h-full bg-transparent mt-[70px] ">
+                    <EnrolledCourses />
+                </div>
+            )}
+
+            {active === 3 && (
+                <div className=" w-[50vw]   h-full bg-transparent mt-[70px] ">
+                    <UpdatePassword />
+                </div>
+            )}
         </div>
     );
 };

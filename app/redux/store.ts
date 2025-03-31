@@ -18,7 +18,7 @@ export const store = configureStore({
 const initializeApp = async () => {
     try {
         // Dispatch refresh token API call
-        // await store.dispatch(apiSlice.endpoints.refreshToken.initiate({forceRefetch : true}));
+        await store.dispatch(apiSlice.endpoints.refreshToken.initiate({forceRefetch : true}));
         //  load the user
         await store.dispatch(apiSlice.endpoints.loadUser.initiate({forceRefetch : true}));
     } catch (error) {

@@ -5,7 +5,7 @@ export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_SERVER_URI,
-    credentials: "include",  // Include credentials globally if needed
+    credentials: "include",
   }),
   endpoints: (builder) => ({
     refreshToken: builder.mutation({
@@ -33,7 +33,7 @@ export const apiSlice = createApi({
           // Handle 401 Unauthorized and refresh logic
           if (error?.meta?.response?.status === 401) {
             try {
-              const refreshResult = await dispatch(apiSlice.endpoints.refreshToken.initiate()).unwrap();
+              const refreshResult = await dispatch(apiSlice.endpoints.refreshToken.initiate({})).unwrap();
     
               if (refreshResult?.accessToken) {
                 dispatch(
@@ -44,7 +44,7 @@ export const apiSlice = createApi({
                 );
     
                 // Retry the original request
-                await dispatch(apiSlice.endpoints.loadUser.initiate());
+                await dispatch(apiSlice.endpoints.loadUser.initiate({}));
               }
             } catch (refreshError) {
               console.error("Token refresh failed:", refreshError);
