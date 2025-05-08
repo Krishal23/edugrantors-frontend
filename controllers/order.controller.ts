@@ -13,11 +13,7 @@ import Razorpay from "razorpay"
 import { redis } from "../utils/redis";
 import orderRouter from "../routes/order.route";
 import crypto from "crypto";
-
-
-
-
-
+import mongoose from 'mongoose';
 
 // Initialize Razorpay instance
 const razorpay = new Razorpay({
@@ -91,112 +87,126 @@ export const verifyPayment = CatchAsyncErrror(async (req: Request, res: Response
 
 
 export const createOrder = CatchAsyncErrror(async (req: Request, res: Response, next: NextFunction) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    
     try {
-        const { courseId,courseName, payment_info, couponCode } = req.body as IOrder;
+        const { courseId, courseName, payment_info, couponCode } = req.body as IOrder;
         const userId = req.user?._id;
-        const user = await userModel.findById(userId);
+        
+        const user = await userModel.findById(userId).session(session);
         if (!user) {
+            await session.abortTransaction();
             return next(new ErrorHandler("User not found", 404));
         }
 
         const courseExistInUser = user.courses.some((course: any) =>
-            course._id.toString() === courseId.toString()
+            course.courseId.toString() === courseId.toString()
         );
 
-
         if (courseExistInUser) {
+            await session.abortTransaction();
             return next(new ErrorHandler("You have already purchased this course", 400));
         }
 
-        // Find the course in the database
-        const course: any = await CourseModel.findById(courseId);
+        const course = await CourseModel.findById(courseId).session(session);
         if (!course) {
+            await session.abortTransaction();
             return next(new ErrorHandler("Course not found", 404));
         }
 
-        // Create the new order
-        const orderData: any = {
+        if (couponCode) {
+            const coupon = course.coupons.find(
+                (c: any) =>
+                    c.couponId === couponCode &&
+                    c.isActive &&
+                    c.validity > new Date() &&
+                    c.count < c.maxAllowed
+            );
+
+            if (!coupon) {
+                await session.abortTransaction();
+                return next(new ErrorHandler("Invalid or expired coupon code", 400));
+            }
+
+            coupon.count += 1;
+            coupon.beneficiary.push(userId);
+        }
+
+        const orderData = {
             courseId: course._id,
             userId: user._id,
             payment_info
         };
 
-        await OrderModel.create(orderData);
+        const order = await OrderModel.create([orderData], { session });
 
-        if (couponCode) {
-            const coupon = course.coupons.find(
-                (coupon: any) =>
-                    coupon.couponId === couponCode &&
-                    // coupon.courseId === courseId &&
-                    coupon.isActive &&
-                    coupon.validity > new Date() &&
-                    coupon.count < coupon.maxAllowed
-            );
-
-            if (!coupon) {
-                return next(new ErrorHandler("Invalid or expired coupon code", 400));
-            }
-
-            // Update coupon usage
-            coupon.count += 1;
-            coupon.beneficiary.push(userId);
-        }
-        // Increment the course's purchase count
         course.purchased = (course.purchased || 0) + 1;
         course.studentsEnrolled.push(user._id);
-        await course.save();
-
-        // // Prepare email data for order confirmation
-        const mailData = {
-            order: {
-                _id: course._id.toString().slice(0, 6),
-                name: course.name,
-                price: course.price,
-                date: new Date().toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                }),
-            },
-        };
-
-        // // Send confirmation email to the user
-        try {
-            await sendMail({
-                email: user.email,
-                subject: 'Order Confirmation',
-                template: "order-confirmation.ejs",
-                data: mailData,
-            });
-        } catch (emailError) {
-            return next(new ErrorHandler("Failed to send order confirmation email", 500));
-        }
+        await course.save({ session });
 
         user.courses.push({
             courseId: course._id,
-            courseName: courseName,
-          });
-          
-        await redis.set(req.user?._id as string, JSON.stringify(user));
-        await user.save();
-
-
-
-        // Create a notification for the new order
-        await NotificationModel.create({
-            userId: user._id,
-            title: "New Order",
-            message: `You have a new order for ${course.name}`,
+            courseName
         });
 
-        // Final response with payment details
+        await user.save({ session });
+
+        try {
+            await redis.set(userId, JSON.stringify(user));
+        } catch (cacheError) {
+            console.error("Cache update failed:", cacheError);
+            // Continue execution even if cache fails
+        }
+
+        try {
+            const mailData = {
+                order: {
+                    _id: course._id.toString().slice(0, 6),
+                    name: course.name,
+                    price: course.price,
+                    date: new Date().toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    })
+                }
+            };
+
+            await sendMail({
+                email: user.email,
+                subject: "Order Confirmation",
+                template: "order-confirmation.ejs",
+                data: mailData
+            });
+        } catch (emailError) {
+            console.error("Email sending failed:", emailError);
+            // Continue execution even if email fails
+        }
+
+        try {
+            await NotificationModel.create({
+                userId: user._id,
+                title: "New Order",
+                message: `You have a new order for ${course.name}`
+            });
+        } catch (notificationError) {
+            console.error("Notification creation failed:", notificationError);
+            // Continue execution even if notification fails
+        }
+
+        await session.commitTransaction();
+
         res.status(201).json({
             success: true,
-            message: "Order created successfully",
+            message: "Order created successfully"
         });
 
     } catch (error: any) {
+        await session.abortTransaction();
         return next(new ErrorHandler(error.message || "Internal Server Error", 500));
+    } finally {
+        session.endSession();
     }
 });
 

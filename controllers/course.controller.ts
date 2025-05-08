@@ -13,7 +13,6 @@ import userModel, { IQuizProgress } from "../models/user.model";
 import NotificationModel from "../models/notificationModel";
 import { IQuiz, IQuestion as IQuizQuestion } from "../models/quiz.model";
 
-
 //upload course
 export const uploadCourse = CatchAsyncErrror(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -109,7 +108,45 @@ export const editCourse = CatchAsyncErrror(
   }
 );
 
+export const updateCourse = CatchAsyncErrror(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    
+    try {
+      const { id } = req.params;
+      const data = req.body;
+      
+      const course = await CourseModel.findById(id).session(session);
+      if (!course) {
+        await session.abortTransaction();
+        return next(new ErrorHandler("Course not found", 404));
+      }
 
+      Object.assign(course, data);
+      await course.save({ session });
+      
+      try {
+        await redis.set(id, JSON.stringify(course), "EX", 604800); // 7 days cache
+      } catch (cacheError) {
+        console.error("Cache update failed:", cacheError);
+        // Continue even if cache fails
+      }
+
+      await session.commitTransaction();
+      
+      res.status(200).json({
+        success: true,
+        course
+      });
+    } catch (error) {
+      await session.abortTransaction();
+      return next(new ErrorHandler(error.message, 500));
+    } finally {
+      session.endSession();
+    }
+  }
+);
 
 export const addCoupons = CatchAsyncErrror(
   async (req: Request, res: Response, next: NextFunction) => {

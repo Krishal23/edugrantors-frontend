@@ -1,43 +1,162 @@
-import Redis from 'ioredis';
-import dotenv from 'dotenv';
+import { Redis } from 'ioredis';
+import { config } from 'dotenv';
+import { memoryCache } from './memoryCache';
+config();
 
-dotenv.config();  // Load environment variables from .env file
+let redisClient: Redis | null = null;
 
-// Function to create Redis client
 const createRedisClient = () => {
-    const redisUrl = process.env.REDIS_URL;
-    
-    if (!redisUrl) {
-        throw new Error('Redis Connection Failed: REDIS_URL is not defined in environment variables.');
+    // Don't create Redis client in development if REDIS_DISABLED is true
+    if (process.env.NODE_ENV === 'development' && process.env.REDIS_DISABLED === 'true') {
+        console.log('Redis disabled in development, using memory cache');
+        return null;
     }
 
-    return redisUrl;  // Return the Redis URL if it's available in environment variables
+    const client = new Redis({
+        host: process.env.REDIS_HOST || 'localhost',
+        port: parseInt(process.env.REDIS_PORT || '6379'),
+        password: process.env.REDIS_PASSWORD,
+        retryStrategy: (times: number) => {
+            const delay = Math.min(Math.exp(times) * 100, 20000); // Exponential backoff up to 20s
+            console.log(`Retrying Redis connection in ${delay}ms... (attempt ${times})`);
+            return delay;
+        },
+        maxRetriesPerRequest: 5,
+        enableOfflineQueue: true,
+        reconnectOnError: (err) => {
+            const targetError = 'READONLY';
+            if (err.message.includes(targetError)) {
+                return true;
+            }
+            return false;
+        },
+        lazyConnect: true // Don't connect immediately
+    });
+
+    client.on('error', (err) => {
+        console.error('Redis Client Error:', err);
+    });
+
+    client.on('connect', () => {
+        console.log('Redis Client Connected');
+    });
+
+    client.on('ready', () => {
+        console.log('Redis Client Ready');
+    });
+
+    client.on('reconnecting', () => {
+        console.log('Redis Client Reconnecting...');
+    });
+
+    client.on('end', () => {
+        console.log('Redis Client Connection Ended');
+    });
+
+    return client;
 };
 
-// Create Redis instance
-export const redis = new Redis(createRedisClient(), {
-    connectTimeout: 10000,  // Set a connect timeout of 10 seconds
-    maxRetriesPerRequest: 50,
-    retryStrategy: (times) => Math.min(times * 100, 2000),  // Exponential backoff for retries
-    keepAlive: 10000,  // Keep the connection alive for 10 seconds
-});
+const getCache = async () => {
+    // If Redis is disabled or unavailable, use memory cache
+    if (process.env.NODE_ENV === 'development' && process.env.REDIS_DISABLED === 'true') {
+        return memoryCache;
+    }
 
-// Log when Redis is connected successfully
-redis.on('connect', () => {
-    console.log('Redis connected successfully');
-});
+    // Try to get or create Redis client
+    if (!redisClient) {
+        redisClient = createRedisClient();
+        if (redisClient) {
+            try {
+                await redisClient.connect();
+            } catch (error) {
+                console.error('Failed to establish Redis connection:', error);
+                redisClient = null;
+                if (process.env.NODE_ENV === 'development') {
+                    console.log('Falling back to memory cache');
+                    return memoryCache;
+                }
+            }
+        }
+    }
+    return redisClient || memoryCache;
+};
 
-// Handle Redis errors
-redis.on('error', (err) => {
-    console.error('Redis error:', err);
-});
+// Redis operations wrapper with fallback mechanisms
+export const redis = {
+    get: async (key: string): Promise<string | null> => {
+        try {
+            const cache = await getCache();
+            return await cache.get(key);
+        } catch (error) {
+            console.error(`Cache GET Error for key ${key}:`, error);
+            return null;
+        }
+    },
 
-// Optionally, you can log when the Redis client is ready to accept commands
-redis.on('ready', () => {
-    console.log('Redis client is ready to use');
-});
+    set: async (key: string, value: string, expireFlag?: string, expireValue?: number): Promise<boolean> => {
+        try {
+            const cache = await getCache();
+            return await cache.set(key, value, expireFlag, expireValue);
+        } catch (error) {
+            console.error(`Cache SET Error for key ${key}:`, error);
+            return false;
+        }
+    },
 
-// Optionally, you can handle the 'end' event to log when the connection is closed
-redis.on('end', () => {
-    console.log('Redis connection closed');
-});
+    del: async (key: string): Promise<boolean> => {
+        try {
+            const cache = await getCache();
+            return await cache.del(key);
+        } catch (error) {
+            console.error(`Cache DEL Error for key ${key}:`, error);
+            return false;
+        }
+    },
+
+    mget: async (keys: string[]): Promise<(string | null)[]> => {
+        try {
+            const cache = await getCache();
+            return await cache.mget(keys);
+        } catch (error) {
+            console.error('Cache MGET Error:', error);
+            return new Array(keys.length).fill(null);
+        }
+    },
+
+    mset: async (keyValuePairs: { [key: string]: string }): Promise<boolean> => {
+        try {
+            const cache = await getCache();
+            return await cache.mset(keyValuePairs);
+        } catch (error) {
+            console.error('Cache MSET Error:', error);
+            return false;
+        }
+    },
+
+    invalidatePattern: async (pattern: string): Promise<boolean> => {
+        try {
+            const cache = await getCache();
+            return await cache.invalidatePattern(pattern);
+        } catch (error) {
+            console.error(`Cache Pattern Invalidation Error for ${pattern}:`, error);
+            return false;
+        }
+    }
+};
+
+export const getRedisClient = async () => {
+    const cache = await getCache();
+    return cache === memoryCache ? null : cache;
+};
+
+// Graceful shutdown handler
+const closeRedisConnection = async () => {
+    if (redisClient) {
+        await redisClient.quit();
+        redisClient = null;
+    }
+};
+
+// Handle process termination
+process.on('SIGTERM', closeRedisConnection);
+process.on('SIGINT', closeRedisConnection);

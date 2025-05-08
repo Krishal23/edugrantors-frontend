@@ -301,6 +301,16 @@ const courseSchema = new Schema<ICourse>(
   { timestamps: true }
 );
 
+// Add indexes for commonly queried fields
+courseSchema.index({ name: 1 });
+courseSchema.index({ teacher: 1 });
+courseSchema.index({ isPublic: 1 });
+courseSchema.index({ 'studentsEnrolled': 1 });
+
+// Compound indexes for complex queries
+courseSchema.index({ isPublic: 1, teacher: 1 });
+courseSchema.index({ 'quizzes._id': 1, 'quizzes.isLive': 1 });
+
 const CourseModel: Model<ICourse> = mongoose.model("Course", courseSchema);
 export default CourseModel;
 
