@@ -1,36 +1,17 @@
+import { Question, QuestionType, QuestionOptionValue } from '@/app/types/question';
 import EvaluateAnswer from "@/app/utils/EvaluateAnswer";
-
 import React from "react";
-
-// Types
-enum QuestionType {
-  Single = "single",
-  Multiple = "multiple",
-  Phrase = "phrase",
-  Numerical = "numerical",
-}
-
-interface Question {
-  type: QuestionType;
-  question: string;
-  options?: { text: string; isCorrect: boolean }[];
-  correctAnswer: string | string[] | number;
-  explanation: string;
-  image?: {
-    url: string;
-  };
-}
 
 interface QuestionModalProps {
   question: Question;
-  selectedOption: any;
+  selectedOption: QuestionOptionValue | null;
   isSubmitted: boolean;
-  handleOptionChange: (option: any) => void;
+  handleOptionChange: (option: QuestionOptionValue) => void;
   handleSubmit: () => void;
   handlePrevious: () => void;
   handleNext: () => void;
   closeModal: () => void;
-  currentQuestionIndex: any;
+  currentQuestionIndex: number;
   totalQuestions: number;
 }
 
@@ -79,13 +60,16 @@ const QuestionModal: React.FC<QuestionModalProps> = ({
               type="checkbox"
               name={`option-${index}`}
               value={index}
-              checked={((selectedOption as number[]) || []).includes(index)}
+              checked={Array.isArray(selectedOption) && selectedOption.includes(index)}
               onChange={() => {
-                const updatedSelection = (selectedOption as number[]) || [];
-                const newSelection = updatedSelection.includes(index)
-                  ? updatedSelection.filter((i) => i !== index)
-                  : [...updatedSelection, index];
-                handleOptionChange(newSelection);
+                const updatedSelection = Array.isArray(selectedOption) ? [...selectedOption] : [];
+                const indexPosition = updatedSelection.indexOf(index);
+                if (indexPosition === -1) {
+                  updatedSelection.push(index);
+                } else {
+                  updatedSelection.splice(indexPosition, 1);
+                }
+                handleOptionChange(updatedSelection);
               }}
               className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 focus:ring-blue-500"
             />
@@ -99,10 +83,8 @@ const QuestionModal: React.FC<QuestionModalProps> = ({
         return (
           <input
             type="number"
-            value={selectedOption || ""}
-            onChange={(e) =>
-              handleOptionChange(Number.parseFloat(e.target.value) || 0)
-            }
+            value={typeof selectedOption === 'number' ? selectedOption : ''}
+            onChange={(e) => handleOptionChange(Number(e.target.value) || 0)}
             className="w-full p-2 bg-gray-700 text-gray-300 rounded text-sm sm:text-base"
             placeholder="Enter your answer"
           />
@@ -111,7 +93,7 @@ const QuestionModal: React.FC<QuestionModalProps> = ({
       case QuestionType.Phrase:
         return (
           <textarea
-            value={selectedOption || ""}
+            value={typeof selectedOption === 'string' ? selectedOption : ''}
             onChange={(e) => handleOptionChange(e.target.value)}
             className="w-full p-2 bg-gray-700 text-gray-300 rounded text-sm sm:text-base"
             placeholder="Type your answer"

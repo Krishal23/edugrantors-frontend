@@ -12,9 +12,7 @@ const Courses = dynamic(() => import('../components/Routes/Courses'), {
   loading: () => <Loader message='Loading Courses' /> // Show the Loader while Courses is being loaded
 });
 
-type Props = {}
-
-const Page = (props: Props) => {
+const Page: React.FC = () => {
   const [route, setRoute] = useState("Login");
   const [open, setOpen] = useState(false);
 

@@ -17,6 +17,12 @@ interface User {
   }
 }
 
+interface RootState {
+  auth: {
+    user: User | null
+  }
+}
+
 interface Reply {
   _id: string
   answer: string
@@ -32,12 +38,12 @@ interface QuestionItemProps {
     questionReplies: Reply[]
     createdAt: string
   }
-  courseId: string  // Add courseId prop
-  contentId: string // Add contentId prop
+  courseId: string
+  contentId: string
   handleAnswerSubmit: (answer: string, questionId: string) => void
   setQuestionId: (id: string) => void
   answerCreationLoading: boolean
-  refetch?: any
+  refetch: () => Promise<void>
 }
 
 export default function QuestionItem({
@@ -52,7 +58,7 @@ export default function QuestionItem({
   const [replyActive, setReplyActive] = useState(false)
   const [answer, setAnswer] = useState("")
 
-  const { user: currentUser } = useSelector((state: any) => state.auth)
+  const { user: currentUser } = useSelector((state: RootState) => state.auth)
 
   const [deleteComment, { isLoading: deletingQuestion }] = useDeleteCommentMutation()
   const [deleteAnswer, { isLoading: deletingAnswer }] = useDeleteAnswerMutation()
