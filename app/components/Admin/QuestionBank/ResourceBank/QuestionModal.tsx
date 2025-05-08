@@ -163,6 +163,15 @@ const QuestionModal: React.FC<QuestionModalProps> = ({
             </p>
             <p className="mt-2">
               <strong>Explanation:</strong> {question.explanation}
+              {
+                question.imageExplain?.url && (
+                  <img
+                    src={question.imageExplain.url}
+                    alt="Explanation"
+                    className="mt-2 rounded"
+                  />
+                )
+              }
             </p>
           </div>
         )}

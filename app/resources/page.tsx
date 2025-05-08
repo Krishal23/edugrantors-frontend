@@ -7,19 +7,26 @@ import Loader from "../components/Loader/Loader";
 import dynamic from 'next/dynamic';
 import Footer from "../components/Footer";
 
-const QuestionBank2 = dynamic(() => import("../components/Admin/QuestionBank/QuestionBank2"), {
-  loading: () => <Loader message="Question Bank Loading" />, // Loader to show while Profile component is being loaded
+interface QuestionBankProps {
+  isEdit?: boolean;
+  selectedQuestions?: string[];
+  setSelectedQuestions?: (questions: string[]) => void;
+  isQuiz?: boolean;
+  isResource?: boolean;
+}
+
+const QuestionBank2 = dynamic<QuestionBankProps>(() => import("../components/Admin/QuestionBank/QuestionBank2"), {
+  loading: () => <Loader message="Question Bank Loading" />,
 });
 
-type Props = {};
+interface PageProps {
+  params: Record<string, never>;
+}
 
-const Page: FC<Props> = () => {
+const Page: FC<PageProps> = () => {
   const [open, setOpen] = useState(false);
   const [activeItem] = useState(3);
   const [route, setRoute] = useState("Login");
-
-
-
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
