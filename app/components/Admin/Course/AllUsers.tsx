@@ -12,7 +12,6 @@ import { FaRegEye } from 'react-icons/fa';
 import { TbDatabaseExport } from "react-icons/tb";
 import Link from 'next/link';
 import * as XLSX from 'xlsx';
-import { IUser } from '../../../../../edugrantors-backend/models/user.model';
 
 type Props = {
     isTeam?: boolean;
@@ -107,7 +106,7 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
     const rows: UserRow[] = [];
 
     if (isTeam) {
-        const newData = data?.users.filter((user: IUser) =>
+        const newData = data?.users.filter((user: any) =>
             user.role === 'admin' || user.role === 'teacher'
         );
         newData?.forEach((user: UserRow) => {
