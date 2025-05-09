@@ -1,6 +1,6 @@
 "use client";
 import React, { FC, useEffect, useState } from 'react';
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { Box, Button, Menu, MenuItem, Typography } from '@mui/material';
 import { AiOutlineEdit, AiOutlineMail } from 'react-icons/ai';
 import { useTheme } from 'next-themes';
