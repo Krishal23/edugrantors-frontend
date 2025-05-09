@@ -1,4 +1,5 @@
-import React from 'react';
+'use client'
+import React, { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import AdminProtected from '@/app/hooks/adminProtected';
 import Heading from '@/app/utils/Heading';
@@ -19,22 +20,24 @@ const AllUsers = dynamic(() => import('@/app/components/Admin/Course/AllUsers'),
 const page = () => {
   return (
     <div>
-      <AdminProtected>
-        <Heading
-          title="EDU GRANTORS - Admin"
-          description="EDU GRANTORS is a platform for learning and development"
-          keywords="Programming, Learning, Development"
-        />
-        <div className='flex min-h-screen'>
-          <div className="1500px:w-[16%] w-1/5 ">
-            <AdminSidebar />
+      <Suspense fallback={<Loader message="Loading..." />}>
+        <AdminProtected>
+          <Heading
+            title="EDU GRANTORS - Admin"
+            description="EDU GRANTORS is a platform for learning and development"
+            keywords="Programming, Learning, Development"
+          />
+          <div className='flex min-h-screen'>
+            <div className="1500px:w-[16%] w-1/5 ">
+              <AdminSidebar />
+            </div>
+            <div className="1500px:w-[85%]">
+              <DashboardHero />
+              <AllUsers />
+            </div>
           </div>
-          <div className="1500px:w-[85%]">
-            <DashboardHero />
-            <AllUsers />
-          </div>
-        </div>
-      </AdminProtected>
+        </AdminProtected>
+      </Suspense>
     </div>
   )
 }

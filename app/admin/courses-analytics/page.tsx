@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import AdminProtected from '@/app/hooks/adminProtected';
 import Heading from '@/app/utils/Heading';
@@ -22,24 +22,26 @@ type Props = {};
 const Page: React.FC<Props> = () => {
   return (
     <div>
-      <AdminProtected>
-        <Heading
-          title="EDU GRANTORS - Admin"
-          description="EDU GRANTORS is a platform for learning and development"
-          keywords="Programming, Learning, Development"
-        />
-        <div className="flex h-[200vh]">
-          {/* Sidebar */}
-          <div className="1500px:w-[15%] w-1/5">
-            <AdminSidebar />
+      <Suspense fallback={<Loader message="Loading Admin Protected Content" />}>
+        <AdminProtected>
+          <Heading
+            title="EDU GRANTORS - Admin"
+            description="EDU GRANTORS is a platform for learning and development"
+            keywords="Programming, Learning, Development"
+          />
+          <div className="flex h-[200vh]">
+            {/* Sidebar */}
+            <div className="1500px:w-[15%] w-1/5">
+              <AdminSidebar />
+            </div>
+            {/* Main Content */}
+            <div className="1500px:w-[85%]">
+              <DashboardHero />
+              {/* <CourseAnalytics /> */}
+            </div>
           </div>
-          {/* Main Content */}
-          <div className="1500px:w-[85%]">
-            <DashboardHero />
-            {/* <CourseAnalytics /> */}
-          </div>
-        </div>
-      </AdminProtected>
+        </AdminProtected>
+      </Suspense>
     </div>
   );
 };

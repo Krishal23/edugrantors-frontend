@@ -1,20 +1,15 @@
 'use client';
+
 import './globals.css';
 import { Poppins, Josefin_Sans } from 'next/font/google';
 import { ThemeProvider } from './utils/theme-provider';
 import { Toaster } from 'react-hot-toast';
 import { Providers } from '../app/Provider';
 import { SessionProvider } from 'next-auth/react';
-import { useLoadUserQuery } from './redux/features/api/apiSlice';
-import Loader from './components/Loader/Loader';
-import React, { useEffect, useState } from 'react';
-import { usePathname, useSearchParams } from 'next/navigation';
-import dynamic from 'next/dynamic';
+import React from 'react';
+// import dynamic from 'next/dynamic';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
-
-const TopLoader = dynamic(() => import('./components/Loader/TopLoader'), {
-  ssr: false,
-});
+import CustomLoader from './CustomLoader';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -28,41 +23,7 @@ const josefin = Josefin_Sans({
   weight: ['400', '500', '600', '700'],
 });
 
-const CustomLoader: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isLoading: isUserLoading, isFetching: isUserFetching } = useLoadUserQuery({});
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const [isNavigating, setIsNavigating] = useState(false);
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
-
-  useEffect(() => {
-    setIsNavigating(true);
-    const timeout = setTimeout(() => {
-      setIsNavigating(false);
-      setIsInitialLoad(false);
-    }, 1000);
-    return () => clearTimeout(timeout);
-  }, [pathname, searchParams]);
-
-  // Determine if any data is being loaded
-  const isDataLoading = isUserLoading || isUserFetching || isNavigating;
-
-  // Show full-screen loader only on initial load
-  if (isUserLoading || (isInitialLoad && isNavigating)) {
-    return <Loader />;
-  }
-
-  return (
-    <>
-      <TopLoader isLoading={isDataLoading} />
-      {children}
-    </>
-  );
-};
-
-export default function RootLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body
