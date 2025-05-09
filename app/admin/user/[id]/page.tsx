@@ -28,7 +28,7 @@ type Props = {
 
 const Page = ({ params }: Props) => {
   const { id } = params;
-  const { data, isLoading, isError, error } = useGetUserDataQuery({ id });
+  const { data, isLoading, isError } = useGetUserDataQuery({ id });
 
   if (isError) {
     return <div>Error fetching user data. Please try again later.</div>;

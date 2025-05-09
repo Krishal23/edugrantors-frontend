@@ -1,17 +1,12 @@
 import React from 'react';
 import { AiOutlineDelete, AiOutlinePlusCircle } from 'react-icons/ai';
-import { QuestionType } from './QuestionInfoForm';
 
-type Props = {
-  questionData: QuestionType;
-  setQuestionData: React.Dispatch<React.SetStateAction<QuestionType>>;
-};
 
-const MultipleCorrectQuestion = ({ questionData, setQuestionData }: Props) => {
+const MultipleCorrectQuestion = ({ questionData, setQuestionData }: any) => {
   const handleOptionChange = (index: number, text: string) => {
     const updatedOptions = [...questionData.options];
     updatedOptions[index] = { ...updatedOptions[index], text };
-    setQuestionData((prev) => ({ ...prev, options: updatedOptions }));
+    setQuestionData((prev:any) => ({ ...prev, options: updatedOptions }));
   };
 
   const handleCorrectAnswerChange = (index: number) => {
@@ -20,7 +15,7 @@ const MultipleCorrectQuestion = ({ questionData, setQuestionData }: Props) => {
 
     const correctAnswers = updatedOptions.filter((opt) => opt.isCorrect).map((opt) => opt.text);
 
-    setQuestionData((prev) => ({
+    setQuestionData((prev:any) => ({
       ...prev,
       options: updatedOptions,
       correctAnswer: correctAnswers,
@@ -28,15 +23,15 @@ const MultipleCorrectQuestion = ({ questionData, setQuestionData }: Props) => {
   };
 
   const handleAddOption = () => {
-    setQuestionData((prev) => ({
+    setQuestionData((prev:any) => ({
       ...prev,
       options: [...prev.options, { text: '', isCorrect: false }],
     }));
   };
 
   const handleRemoveOption = (index: number) => {
-    const updatedOptions = questionData.options.filter((_, i) => i !== index);
-    setQuestionData((prev) => ({ ...prev, options: updatedOptions }));
+    const updatedOptions = questionData.options.filter((_:any, i:any) => i !== index);
+    setQuestionData((prev:any) => ({ ...prev, options: updatedOptions }));
   };
 
   return (
@@ -46,7 +41,7 @@ const MultipleCorrectQuestion = ({ questionData, setQuestionData }: Props) => {
         <input
           type="text"
           value={questionData.question}
-          onChange={(e) => setQuestionData((prev) => ({ ...prev, question: e.target.value }))}
+          onChange={(e) => setQuestionData((prev:any) => ({ ...prev, question: e.target.value }))}
           className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
           placeholder="Enter the question here"
         />
@@ -54,7 +49,7 @@ const MultipleCorrectQuestion = ({ questionData, setQuestionData }: Props) => {
 
       <div className="mb-4">
         <label className="text-sm font-semibold text-gray-400">Options (Select multiple correct options)</label>
-        {questionData.options.map((option, index) => (
+        {questionData.options.map((option:any, index:any) => (
           <div key={index} className="flex items-center space-x-3 mt-2">
             <input
               type="text"

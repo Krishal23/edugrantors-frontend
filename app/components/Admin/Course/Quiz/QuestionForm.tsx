@@ -18,25 +18,11 @@ const PhraseQuestion = dynamic(() => import('./PhraseQuestion'), {
   loading: () => <Loader message='Loading Phrase Question...'/>,
 });
 
-// Define the types for the questions
-export interface QuestionType {
-  type: 'single' | 'multiple' | 'numerical' | 'phrase';
-  question: string;
-  options: { text: string; isCorrect: boolean }[];
-  marks: number;
-  correctAnswer:any;
-  explanation: string;
-  image: string;
 
-}
 
-type Props = {
-  setActiveStep: (step: number) => void;
-  questions: QuestionType[];
-  setQuestions: (questions: QuestionType[]) => void;
-};
 
-const QuestionForm = ({ setActiveStep, questions, setQuestions }: Props) => {
+
+const QuestionForm = ({ setActiveStep, questions, setQuestions }: any) => {
   const [isCollapsed, setIsCollapsed] = useState<boolean[]>([]);
 
   useEffect(() => {
@@ -75,15 +61,15 @@ const QuestionForm = ({ setActiveStep, questions, setQuestions }: Props) => {
   };
 
   const handleSubmit = () => {
-    if (questions.some(q => !q.question || !q.explanation || (q.type !== 'phrase' && q.options.some(opt => !opt.text)) || q.marks <= 0)) {
+    if (questions.some((q: { question: any; explanation: any; type: string; options: any[]; marks: number; }) => !q.question || !q.explanation || (q.type !== 'phrase' && q.options.some(opt => !opt.text)) || q.marks <= 0)) {
       toast.error('Please ensure all fields are filled before submitting.');
       return;
     }
     setActiveStep(2);
   };
 
-  const handleQuestionTypeChange = (index: number, type: QuestionType['type']) => {
-    setQuestions(prevQuestions => {
+  const handleQuestionTypeChange = (index: number, type: any) => {
+    setQuestions((prevQuestions: any) => {
       const updatedQuestions = [...prevQuestions];
       updatedQuestions[index] = { ...updatedQuestions[index], type, options: [] };
       return updatedQuestions;
@@ -94,7 +80,7 @@ const QuestionForm = ({ setActiveStep, questions, setQuestions }: Props) => {
     <div className="w-[80%] m-auto mt-4 p-6 bg-white dark:bg-gray-800 shadow-md rounded-lg">
       <h1 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-white">Question Form</h1>
 
-      {questions.map((question, index) => (
+      {questions.map((question:any, index:any) => (
         <div key={index} className="mb-6 border-b pb-4">
           <div className="flex justify-between items-center">
             <h2 className="text-lg font-medium text-gray-800 dark:text-white">
@@ -123,7 +109,7 @@ const QuestionForm = ({ setActiveStep, questions, setQuestions }: Props) => {
                 </label>
                 <select
                   value={question.type}
-                  onChange={(e) => handleQuestionTypeChange(index, e.target.value as QuestionType['type'])}
+                  onChange={(e) => handleQuestionTypeChange(index, e.target.value as any)}
                   className="mt-1 block w-full px-3 py-2 border rounded-md text-gray-900 dark:text-gray-300 dark:bg-gray-700"
                 >
                   <option value="single">Single Correct</option>

@@ -1,3 +1,5 @@
+'use client'
+
 import React, { FC, useState } from 'react';
 import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
 
@@ -9,12 +11,12 @@ type Props = {
     theme?: 'light' | 'dark'; // New prop for theme
 };
 
-const CourseContentList: FC<Props> = ({ data, activeVideo, setActiveVideo, isDemo, theme = 'light' }) => {
+const CourseContentList: FC<Props> = ({ data ,isDemo = 'light' }) => {
     const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set<string>());
 
     const videoSections: string[] = Array.from(new Set(data?.map((item: any) => item.videoSection)));
 
-    let totalCount = 0;
+    // let totalCount = 0;
 
     // Toggles the visibility of a specific section
     const toggleSectionVisibility = (section: string) => {

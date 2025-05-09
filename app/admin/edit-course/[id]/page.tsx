@@ -21,9 +21,14 @@ const EditCourse = dynamic(() => import("../../../components/Admin/Course/EditCo
   loading: () => <Loader message='Loading, please wait...'/>,
 });
 
-type Props = {}
 
-const Page = ({ params }: any) => {
+interface PageProps {
+  params: {
+    id: string;
+  };
+}
+
+const Page = ({ params }: PageProps) => {
   const id = params.id;
 
   return (

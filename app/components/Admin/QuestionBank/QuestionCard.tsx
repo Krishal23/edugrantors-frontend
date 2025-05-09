@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 import {
   FaCheckCircle,
-  FaEdit,
+  // FaEdit,
   FaTrashAlt,
   FaChevronDown,
   FaChevronUp,

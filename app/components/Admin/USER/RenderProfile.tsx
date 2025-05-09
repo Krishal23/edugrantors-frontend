@@ -8,7 +8,7 @@ import {
 import { MdClass } from "react-icons/md";
 
 const avatarDefault = "/assets/avatar.png";
-const getGenderIcon = (gender) => {
+const getGenderIcon = (gender:any) => {
   switch (gender?.toLowerCase()) {
     case "male":
       return <FaMale className="inline-block mr-2 text-indigo-400" />;
@@ -18,7 +18,7 @@ const getGenderIcon = (gender) => {
       return <FaGenderless className="inline-block mr-2 text-indigo-400" />;
   }
 };
-const RenderProfile = ({ userData }) => (
+const RenderProfile = ({ userData }:any) => (
   <div className="p-6 space-y-6 bg-gray-800 rounded-lg shadow-lg">
     <div className="flex items-center space-x-6">
       {/* Profile Image */}

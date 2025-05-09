@@ -3,11 +3,8 @@ import React, { FC, useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
-import { useTheme } from 'next-themes';
 import toast from 'react-hot-toast';
 import { useUpdatePasswordMutation } from '@/app/redux/features/user/userApi';
-
-type Props = {};
 
 const schema = Yup.object().shape({
     oldPassword: Yup.string().required('Please enter your old password'),
@@ -15,17 +12,16 @@ const schema = Yup.object().shape({
         .required('Please enter your new password')
         .min(6, 'Password must be at least 6 characters long'),
     confirmPassword: Yup.string()
-        .oneOf([Yup.ref('newPassword'), null], 'Passwords must match')
+        .oneOf([Yup.ref('newPassword')], 'Passwords must match')
         .required('Please confirm your new password'),
 });
 
-const UpdatePassword: FC<Props> = ({}) => {
+const UpdatePassword = ({}) => {
     const [showOld, setShowOld] = useState(false);
     const [showNew, setShowNew] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
     const [updatePassword, { isSuccess, error }] = useUpdatePasswordMutation();
 
-    const { theme } = useTheme();
 
     const formik = useFormik({
         initialValues: {
@@ -113,7 +109,7 @@ const PasswordField: FC<{
     onBlur: React.FocusEventHandler<HTMLInputElement>;
     showPassword: boolean;
     setShowPassword: React.Dispatch<React.SetStateAction<boolean>>;
-    error?: string | false;
+    error?: string | false | undefined;
 }> = ({
     label,
     name,

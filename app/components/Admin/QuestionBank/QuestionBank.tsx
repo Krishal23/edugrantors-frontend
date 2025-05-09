@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { useGetAllQuestionQuery } from "@/app/redux/features/question-bank/questionBankApi";
 import { BsBank2 } from "react-icons/bs";
 import { AiFillPlusCircle } from "react-icons/ai";
@@ -24,22 +24,16 @@ const AttemptQuestion = dynamic(() => import('./AttemptQuestion'), {
   loading: () => <Loader message='Loading Question ...' />,
 });
 
-type Props = {
-  isEdit?: boolean;
-  selectedQuestions?: any;
-  setSelectedQuestions?: any;
-  isQuiz?: boolean;
-  isResource?: boolean
-};
 
-const QuestionBank = ({ isQuiz, isEdit, isResource, selectedQuestions, setSelectedQuestions }: Props) => {
+
+const QuestionBank = ({ isQuiz, isEdit, isResource, selectedQuestions, setSelectedQuestions }:any) => {
   const { data, refetch } = useGetAllQuestionQuery({}, { refetchOnMountOrArgChange: true });
   const { data: allCourses } = useGetAllCourseNamesQuery({});
   const [courseId, setCourseId] = useState("");
   const [topic, setTopic] = useState("");
   const [subTopic, setSubTopic] = useState("");
   const [type, setType] = useState("");
-  const [isFabClicked, setIsFabClicked] = useState(false);
+  const [, setIsFabClicked] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [attempt, setAttempt] = useState()
 
@@ -74,7 +68,7 @@ const QuestionBank = ({ isQuiz, isEdit, isResource, selectedQuestions, setSelect
         course = { courseId: question.courseId, topics: [], name: "" };
         result.push(course);
       }
-      let topic = course.topics.find((item) => item.topics === question.topic);
+      let topic = course.topics.find((item:any) => item.topics === question.topic);
       if (!topic) {
         topic = { topics: question.topic, subtopics: [] };
         course.topics.push(topic);
@@ -84,7 +78,7 @@ const QuestionBank = ({ isQuiz, isEdit, isResource, selectedQuestions, setSelect
       }
     });
 
-    allCourses?.courses?.forEach((course) => {
+    allCourses?.courses?.forEach((course:any) => {
       const existingCourse = result.find((item) => item.courseId === course._id);
       if (!existingCourse) {
         result.push({
@@ -137,7 +131,7 @@ const QuestionBank = ({ isQuiz, isEdit, isResource, selectedQuestions, setSelect
                 refetch={refetch}
                 mappedData={mappedData}
                 queId={question._id}
-                isSelected={selectedQuestions?.some((q) => q._id === question._id)} // Check by ID
+                isSelected={selectedQuestions?.some((q:any) => q._id === question._id)} // Check by ID
                 onSelectQuestion={(isSelected: boolean) =>
                   handleSelectQuestion(question, isSelected)
                 }

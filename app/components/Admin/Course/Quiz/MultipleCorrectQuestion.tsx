@@ -1,18 +1,13 @@
+'use client'
+
 import React, { useEffect, useState } from "react";
 import { AiOutlineDelete, AiOutlinePlusCircle } from "react-icons/ai";
-import { QuestionType } from "./QuestionForm";
 
-type Props = {
-  question: QuestionType;
-  setQuestions: (questions: QuestionType[]) => void;
-  index: number;
-};
-
-const MultipleCorrectQuestion = ({ question, setQuestions, index }: Props) => {
+const MultipleCorrectQuestion = ({ question, setQuestions, index }: any) => {
   const [dragging, setDragging] = useState(false);
   useEffect(() => {
     if (question.options.length === 0) {
-      setQuestions((prevQuestions) => {
+      setQuestions((prevQuestions:any) => {
         const updatedQuestions = [...prevQuestions];
         updatedQuestions[index] = {
           ...updatedQuestions[index],
@@ -21,12 +16,12 @@ const MultipleCorrectQuestion = ({ question, setQuestions, index }: Props) => {
         };
         return updatedQuestions;
       });
-    } else if (!question.options.some((opt) => opt.isCorrect)) {
-      setQuestions((prevQuestions) => {
+    } else if (!question.options.some((opt:any) => opt.isCorrect)) {
+      setQuestions((prevQuestions:any) => {
         const updatedQuestions = [...prevQuestions];
         updatedQuestions[index] = {
           ...updatedQuestions[index],
-          options: updatedQuestions[index].options.map((opt, idx) =>
+          options: updatedQuestions[index].options.map((opt:any, idx:any) =>
             idx === 0 ? { ...opt, isCorrect: true } : opt
           ),
           correctAnswer: [updatedQuestions[index].options[0].text], // Ensure at least one correct answer
@@ -43,15 +38,15 @@ const MultipleCorrectQuestion = ({ question, setQuestions, index }: Props) => {
   };
 
   const handleOptionChange = (optionIndex: number, value: string) => {
-    setQuestions((prevQuestions) => {
+    setQuestions((prevQuestions:any) => {
       const updatedQuestions = [...prevQuestions];
       updatedQuestions[index] = {
         ...updatedQuestions[index],
-        options: updatedQuestions[index].options.map((opt, idx) =>
+        options: updatedQuestions[index].options.map((opt:any, idx:any) =>
           idx === optionIndex ? { ...opt, text: value } : opt
         ),
         correctAnswer: updateCorrectAnswerArray(
-          updatedQuestions[index].options.map((opt, idx) =>
+          updatedQuestions[index].options.map((opt:any, idx:any) =>
             idx === optionIndex ? { ...opt, text: value } : opt
           )
         ),
@@ -61,15 +56,15 @@ const MultipleCorrectQuestion = ({ question, setQuestions, index }: Props) => {
   };
 
   const handleCorrectChange = (optionIndex: number) => {
-    setQuestions((prevQuestions) => {
+    setQuestions((prevQuestions:any) => {
       const updatedQuestions = [...prevQuestions];
       updatedQuestions[index] = {
         ...updatedQuestions[index],
-        options: updatedQuestions[index].options.map((opt, idx) =>
+        options: updatedQuestions[index].options.map((opt:any, idx:any) =>
           idx === optionIndex ? { ...opt, isCorrect: !opt.isCorrect } : opt
         ),
         correctAnswer: updateCorrectAnswerArray(
-          updatedQuestions[index].options.map((opt, idx) =>
+          updatedQuestions[index].options.map((opt:any, idx:any) =>
             idx === optionIndex ? { ...opt, isCorrect: !opt.isCorrect } : opt
           )
         ),
@@ -79,7 +74,7 @@ const MultipleCorrectQuestion = ({ question, setQuestions, index }: Props) => {
   };
 
   const handleAddOption = () => {
-    setQuestions((prevQuestions) => {
+    setQuestions((prevQuestions:any) => {
       const updatedQuestions = [...prevQuestions];
       updatedQuestions[index] = {
         ...updatedQuestions[index],
@@ -93,18 +88,18 @@ const MultipleCorrectQuestion = ({ question, setQuestions, index }: Props) => {
   };
 
   const handleRemoveOption = (optionIndex: number) => {
-    setQuestions((prevQuestions) => {
+    setQuestions((prevQuestions:any) => {
       const updatedQuestions = [...prevQuestions];
       if (
         updatedQuestions[index].options[optionIndex].isCorrect &&
-        updatedQuestions[index].options.filter((opt) => opt.isCorrect)
+        updatedQuestions[index].options.filter((opt:any) => opt.isCorrect)
           .length === 1
       ) {
         alert("At least one option must be marked as correct.");
         return prevQuestions;
       }
       const updatedOptions = updatedQuestions[index].options.filter(
-        (_, idx) => idx !== optionIndex
+        (_:any, idx:any) => idx !== optionIndex
       );
       updatedQuestions[index] = {
         ...updatedQuestions[index],
@@ -119,7 +114,7 @@ const MultipleCorrectQuestion = ({ question, setQuestions, index }: Props) => {
     field: "question" | "explanation" | "marks",
     value: string | number
   ) => {
-    setQuestions((prevQuestions) => {
+    setQuestions((prevQuestions:any) => {
       const updatedQuestions = [...prevQuestions];
       updatedQuestions[index] = { ...updatedQuestions[index], [field]: value };
       return updatedQuestions;
@@ -131,7 +126,7 @@ const MultipleCorrectQuestion = ({ question, setQuestions, index }: Props) => {
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
-        setQuestions((prevQuestions) => {
+        setQuestions((prevQuestions:any) => {
           const updatedQuestions = [...prevQuestions];
           updatedQuestions[index] = {
             ...updatedQuestions[index],
@@ -161,7 +156,7 @@ const MultipleCorrectQuestion = ({ question, setQuestions, index }: Props) => {
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
-        setQuestions((prevQuestions) => {
+        setQuestions((prevQuestions:any) => {
           const updatedQuestions = [...prevQuestions];
           updatedQuestions[index] = {
             ...updatedQuestions[index],
@@ -238,7 +233,7 @@ const MultipleCorrectQuestion = ({ question, setQuestions, index }: Props) => {
             className="mt-3 text-sm bg-red-700 p-2 rounded-md text-gray-100 hover:bg-red-600"
             onClick={(e) => {
               e.stopPropagation();
-              setQuestions((prevQuestions) => {
+              setQuestions((prevQuestions:any) => {
                 const updatedQuestions = [...prevQuestions];
                 updatedQuestions[index] = {
                   ...updatedQuestions[index],
@@ -285,7 +280,7 @@ const MultipleCorrectQuestion = ({ question, setQuestions, index }: Props) => {
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
           Options (Select multiple correct options)
         </label>
-        {question.options.map((option, optionIndex) => (
+        {question.options.map((option:any, optionIndex:any) => (
           <div key={optionIndex} className="flex items-center mt-2 space-x-2">
             <input
               type="text"

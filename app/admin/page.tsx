@@ -19,9 +19,9 @@ const DashboardHero = dynamic(() => import('../components/Admin/DashboardHero'),
 //   ssr: false,
 //   loading: () => <Loader />,
 // });
-type Props = {}
 
-const Page = (props: Props) => {
+
+const Page = () => {
   return (
     <div>
       <AdminProtected>

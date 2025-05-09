@@ -8,7 +8,6 @@ const QuizStart = dynamic(() => import('@/app/components/Quiz/QuizStart'), {
 });
 
 
-type Props = {}
 
 const page = ({params}: any) => {
     const { cid, qid } = params;

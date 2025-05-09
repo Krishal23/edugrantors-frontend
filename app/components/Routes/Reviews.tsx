@@ -3,7 +3,6 @@ import React, { FC } from "react";
 
 import { AiFillStar } from "react-icons/ai";
 import { useTheme } from "next-themes";
-import ayush from "../../../public/reviews/Ayush.jpg";
 
 type Review = {
   username: string;
@@ -63,8 +62,8 @@ const Reviews: FC = () => {
               <img
                 src={review.profileImage || defaultImage}
                 alt={`${review.username}'s profile`}
-                layout="fill"
-                objectFit="cover"
+                // layout="fill"
+                // objectFit="cover"
                 className="rounded-full"
               />
             </div>

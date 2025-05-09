@@ -4,7 +4,6 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { FcGoogle } from 'react-icons/fc';
-import { useTheme } from 'next-themes';
 import { useLoginMutation } from '../../redux/features/auth/authApi';
 import toast from 'react-hot-toast';
 import { signIn } from 'next-auth/react';
@@ -21,7 +20,6 @@ const schema = Yup.object().shape({
 
 const Login: FC<Props> = ({ setRoute, setOpen }) => {
     const [show, setShow] = useState(false);
-    const { theme } = useTheme();
     const [login, { isSuccess, isError, error }] = useLoginMutation();
     
     const formik = useFormik({
@@ -39,7 +37,7 @@ const Login: FC<Props> = ({ setRoute, setOpen }) => {
         },
     });
     
-    const [invalidError, setInvalidError] = useState<boolean>(false);
+    const [, setInvalidError] = useState<boolean>(false);
 
     useEffect(() => {
         if (isSuccess) {

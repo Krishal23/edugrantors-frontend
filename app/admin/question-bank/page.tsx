@@ -21,11 +21,7 @@ const QuestionBank = dynamic(() => import("@/app/components/Admin/QuestionBank/Q
   });
   
 
-
-type Props = {}
-
-const page = ({params}: any) => {
-    
+const page = () => {
   return (
     <div>
       <AdminProtected>

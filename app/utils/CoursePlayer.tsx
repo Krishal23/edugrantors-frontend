@@ -6,7 +6,7 @@ type Props = {
     title: string;
 };
 
-const CoursePlayer: FC<Props> = ({ videoUrl, title }) => {
+const CoursePlayer: FC<Props> = ({ videoUrl }) => {
     const { theme } = useTheme();
 
     // Function to extract the video ID from different video URLs
@@ -49,7 +49,7 @@ const CoursePlayer: FC<Props> = ({ videoUrl, title }) => {
 
     // Define dynamic styles based on theme
     const containerClass = theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900';
-    const titleClass = theme === 'dark' ? 'text-white' : 'text-gray-800';
+    // const titleClass = theme === 'dark' ? 'text-white' : 'text-gray-800';
 
     return (
         <div className={`rounded-lg overflow-hidden shadow-2xl p-6 max-w-xl mx-auto transform transition duration-500 hover:scale-105 ${containerClass}`}>

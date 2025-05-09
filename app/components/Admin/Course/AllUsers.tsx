@@ -1,6 +1,6 @@
 "use client";
 import React, { FC, useEffect, useState } from 'react';
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { Box, Button, Menu, MenuItem, Typography } from '@mui/material';
 import { AiOutlineEdit, AiOutlineMail } from 'react-icons/ai';
 import { useTheme } from 'next-themes';
@@ -11,16 +11,37 @@ import toast from 'react-hot-toast';
 import { FaRegEye } from 'react-icons/fa';
 import { TbDatabaseExport } from "react-icons/tb";
 import Link from 'next/link';
-import * as XLSX from 'xlsx'; // Import XLSX for exporting Excel
+import * as XLSX from 'xlsx';
+import { IUser } from '../../../../../edugrantors-backend/models/user.model';
 
 type Props = {
     isTeam?: boolean;
-}
+};
+
+// interface User {
+//     _id: string;
+//     name: string;
+//     email: string;
+//     contactnumber: string;
+//     role: string;
+//     courses: any[];
+//     createdAt: string;
+// }
+
+type UserRow = {
+    id: string;
+    name: string;
+    email: string;
+    contact: string;
+    role: string;
+    courses: number;
+    created_at: string;
+};
 
 const AllUsers: FC<Props> = ({ isTeam }) => {
     const { theme } = useTheme();
-    const [role, setRole] = useState("admin");
-    const [userId, setUserId] = useState("");
+    const [, setRole] = useState("admin");
+    const [userId, setUserId] = useState<string>("");
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
     const { data, isLoading } = useGetAllUsersQuery({});
@@ -28,29 +49,25 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
 
     useEffect(() => {
         if (isSuccess) {
-            toast.success("Role Updated Successfully")
+            toast.success("Role Updated Successfully");
         }
-    }, [isSuccess])
+    }, [isSuccess]);
 
-    const columns = [
+    const columns: GridColDef<UserRow>[] = [
         { field: "id", headerName: "ID", minWidth: 70, flex: 0.3 },
         {
             field: "name",
             headerName: "Name",
             minWidth: 200,
             flex: 1,
-            renderCell: (params: any) => {
-                return (
-                    <div className="flex items-center justify-between">
-                        <span>{params.row.name}</span>
-                        <Link href={`/admin/user/${params.row.id}`} passHref>
-                            <FaRegEye size={20} color='gray' />
-                        </Link>
-
-                    </div>
-                );
-            }
-
+            renderCell: (params: GridRenderCellParams<UserRow>) => (
+                <div className="flex items-center justify-between w-full">
+                    <span>{params.row.name}</span>
+                    <Link href={`/admin/user/${params.row.id}`} passHref>
+                        <FaRegEye size={20} color="gray" />
+                    </Link>
+                </div>
+            )
         },
         { field: "email", headerName: "Email", minWidth: 120, flex: 0.4 },
         { field: "contact", headerName: "Contact", minWidth: 120, flex: 0.4 },
@@ -59,70 +76,61 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
             headerName: "Role",
             minWidth: 120,
             flex: 0.4,
-            renderCell: (params: any) => {
-                const isAdmin = params.row.role === "admin";
-                return (
-                    <div className="flex items-center justify-between">
-                        <span>{params.row.role}</span>
-                        {params.row.role !== "admin" && (
-                            <Button
-                                onClick={(e) => {
-                                    handleRoleMenuOpen(e, params.row.id)
-
-                                }}
-                            >
-                                <AiOutlineEdit size={20} />
-                            </Button>
-                        )}
-                    </div>
-                );
-            }
+            renderCell: (params: GridRenderCellParams<UserRow>) => (
+                <div className="flex items-center justify-between w-full">
+                    <span>{params.row.role}</span>
+                    {params.row.role !== "admin" && (
+                        <Button
+                            onClick={(e) => handleRoleMenuOpen(e, params.row.id)}
+                        >
+                            <AiOutlineEdit size={20} />
+                        </Button>
+                    )}
+                </div>
+            )
         },
         { field: "courses", headerName: "Purchased Courses", minWidth: 60, flex: 0.5 },
         { field: "created_at", headerName: "Joined At", minWidth: 80, flex: 0.5 },
         {
-            field: " ",
+            field: "email_icon",
             headerName: "",
             minWidth: 100,
             flex: 0.2,
-            renderCell: (params: any) => (
+            renderCell: (params: GridRenderCellParams<UserRow>) => (
                 <a href={`mailto:${params.row.email}`}>
-                    <AiOutlineMail
-                        className={theme === "dark" ? "text-white" : "text-black"}
-                        size={20}
-                    />
+                    <AiOutlineMail size={20} color="gray" />
                 </a>
             )
         }
     ];
 
-    // Prepare the rows data based on the `isTeam` flag
-    const rows: any[] = [];
+    const rows: UserRow[] = [];
 
     if (isTeam) {
-        // Show both 'admin' and 'teacher' roles
-        const newData = data?.users.filter((item: any) => item.role === 'admin' || item.role === 'teacher');
-        newData?.forEach((item: any) => {
+        const newData = data?.users.filter((user: IUser) =>
+            user.role === 'admin' || user.role === 'teacher'
+        );
+        newData?.forEach((user: UserRow) => {
             rows.push({
-                id: item._id,
-                name: item.name || "",
-                email: item.email || "N/A",
-                contact:item.contactnumber || "N/A",
-                role: item.role || "null",
-                courses: item.courses.length,
-                created_at: format(item.createdAt),
+                id: user.id,
+                name: user.name || "",
+                email: user.email || "N/A",
+                contact: user.contact || "N/A",
+                role: user.role || "null",
+                courses: user.courses || 0,
+                created_at: format(user.created_at)
             });
         });
     } else if (data && data.users) {
-        data.users.forEach((item: any) => {
+        data.users.forEach((user: UserRow) => {
             rows.push({
-                id: item._id,
-                name: item.name || "",
-                email: item.email || "N/A",
-                contact:item.contactnumber || "N/A",
-                role: item.role || "null",
-                courses: item.courses.length,
-                created_at: format(item.createdAt),
+                id: user.id,
+                name: user.name || "",
+                email: user.email || "N/A",
+                contact: user.contact || "N/A",
+                role: user.role || "null",
+                courses: user.courses || 0,
+                created_at: format(user.created_at)
             });
         });
     }
@@ -136,61 +144,50 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
         await updateUserRole({ id: userId, role: newRole });
         setRole(newRole);
         setAnchorEl(null);
-
     };
 
-
-     // Export to Excel function
-     const exportToExcel = () => {
-        const ws = XLSX.utils.json_to_sheet(rows); // Convert rows data to sheet
-        const wb = XLSX.utils.book_new(); // Create a new workbook
-        XLSX.utils.book_append_sheet(wb, ws, "Users"); // Append the sheet to the workbook
-        XLSX.writeFile(wb, "Users_Data.xlsx"); // Download the file
+    const exportToExcel = () => {
+        const ws = XLSX.utils.json_to_sheet(rows);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Users");
+        XLSX.writeFile(wb, "Users_Data.xlsx");
     };
 
     return (
         <div className="mt-[80px]">
-
             <div className="flex justify-between items-end">
+                <Typography
+                    variant="h4"
+                    sx={{
+                        textAlign: 'center',
+                        mb: 1,
+                        ml: 4,
+                        fontWeight: 'bold',
+                        fontSize: '2rem',
+                        width: "fit-content",
+                        color: theme === 'dark' ? '#E0E0E0' : '#333333',
+                        textTransform: 'uppercase',
+                        letterSpacing: '1px',
+                        backgroundColor: theme === 'dark' ? '#2D2D3A' : '#A4A9FC',
+                        padding: '12px 12px',
+                        borderRadius: '12px',
+                        boxShadow: theme === 'dark'
+                            ? '0px 4px 12px rgba(0, 0, 0, 0.6)'
+                            : '0px 4px 12px rgba(0, 0, 0, 0.2)',
+                    }}
+                >
+                    {isTeam ? 'Manage Team' : 'All Users'}
+                </Typography>
 
-            <Typography
-                variant="h4"
-                sx={{
-                    textAlign: 'center',
-                    mb: 1,
-                    ml: 4,
-                    fontWeight: 'bold',
-                    fontSize: '2rem',
-                    width: "fit-content",
-                    color: theme === 'dark' ? '#E0E0E0' : '#333333', // Light gray for text in dark theme
-                    textTransform: 'uppercase', // Capitalize the title for a more prominent look
-                    letterSpacing: '1px', // Add letter spacing for a more styled look
-                    backgroundColor: theme === 'dark' ? '#2D2D3A' : '#A4A9FC', // Dark background for dark theme, light background for light theme
-                    padding: '12px 12px', // Add padding for better spacing around the title
-                    borderRadius: '12px', // Slightly rounded corners for a smooth aesthetic
-                    boxShadow: theme === 'dark' ? '0px 4px 12px rgba(0, 0, 0, 0.6)' : '0px 4px 12px rgba(0, 0, 0, 0.2)', // Stronger shadow for dark theme
-                }}
-            >
-                {isTeam ? 'Manage Team' : 'All Users'}
-            </Typography>
-
-
-            <Button
-                onClick={exportToExcel}
-                variant="contained"
-                color="primary"
-            >
-                {/* Export to Excel */}
-                <TbDatabaseExport />
-            </Button>
+                <Button onClick={exportToExcel} variant="contained" color="primary">
+                    <TbDatabaseExport />
+                </Button>
             </div>
-
-
 
             {isLoading ? (
                 <Loader />
             ) : (
-                <Box mb="8 px" mx="20px">
+                <Box mb="8px" mx="20px">
                     <Box
                         m="40px 16px"
                         height="60vh"
@@ -202,7 +199,7 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
                             },
                             "& .MuiDataGrid-columnHeaders": {
                                 backgroundColor: theme === "dark" ? "#333A56" : "#A4A9FC",
-                                color: theme === "dark" ? "#000" : "#000",
+                                color: "#000",
                                 fontSize: "1rem",
                                 fontWeight: "bold",
                                 borderBottom: theme === "dark" ? "1px solid #444" : "1px solid rgba(224, 224, 224, 1)",
@@ -234,7 +231,7 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
                             disableColumnMenu
                             initialState={{
                                 pagination: {
-                                    paginationModel: { pageSize: 5 }, // ✅ Correct way to set the default page size
+                                    paginationModel: { pageSize: 5 },
                                 },
                             }}
                             pageSizeOptions={[5, 10, 20]}

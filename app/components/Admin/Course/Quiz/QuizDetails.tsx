@@ -15,7 +15,7 @@ interface QuizDetailsProps {
 const QuizDetails: React.FC<QuizDetailsProps> = ({
   quizDetails,
   setQuizDetails,
-  setActiveStep,
+  // setActiveStep,
   handleSubmit,
   isEdit,
 
@@ -23,7 +23,7 @@ const QuizDetails: React.FC<QuizDetailsProps> = ({
 }) => {
 
   
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setQuizDetails({ ...quizDetails, [name]: value });
   };

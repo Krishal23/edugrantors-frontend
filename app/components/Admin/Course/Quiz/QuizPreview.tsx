@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTheme } from 'next-themes';
+// import { useTheme } from 'next-themes';
 import dynamic from 'next/dynamic';
 import Loader from '@/app/components/Loader/Loader';
 
@@ -20,7 +20,11 @@ interface QuizPreviewProps {
     description: string;
     startTime: string;
     duration: number;
-    courseId:string;
+    courseId: string;
+    quizId: string;
+    totalQuestion: number;
+    maxMarks: number;
+    attemptedBy: { userId: string; name: string; }[];
   };
   questions: {
     question: string;
@@ -42,12 +46,12 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({
   setActiveStep,
   isLoading,
 }) => {
-  const { theme } = useTheme();
+  // const { theme } = useTheme();
   
-  const containerClass = theme === 'dark' ? 'text-white' : 'text-gray-900';
+  // const containerClass = theme === 'dark' ? 'text-white' : 'text-gray-900';
 
   return (
-    <div className={`w-[90%] m-auto py-5 mb-5 ${containerClass} rounded-lg shadow-lg p-4`}>
+    <div>
       <h2 className={`text-2xl font-bold mx-8 mt-6`}>Quiz Preview</h2>
 
       {/* Quiz Details */}

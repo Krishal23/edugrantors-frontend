@@ -1,3 +1,5 @@
+'use client'
+
 import { useTheme } from 'next-themes';
 import React, { FC, useState, useEffect } from 'react';
 import { AiOutlineDelete, AiOutlinePlusCircle } from 'react-icons/ai';
@@ -371,7 +373,7 @@ const CourseContent: FC<Props> = ({
                                     <div>
                                         <p
                                             className='flex items-center text-[18px] dark:text-white text-black cursor-pointer '
-                                            onClick={(e: any) => newContentHandler(item)}
+                                            onClick={() => newContentHandler(item)}
                                         >
                                             <AiOutlinePlusCircle className="mr-2" /> Add New Content
                                         </p>

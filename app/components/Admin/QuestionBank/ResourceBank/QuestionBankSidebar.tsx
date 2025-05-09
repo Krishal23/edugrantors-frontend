@@ -1,4 +1,4 @@
-import { useGetAllCourseNamesQuery } from "@/app/redux/features/courses/coursesApi";
+// import { useGetAllCourseNamesQuery } from "@/app/redux/features/courses/coursesApi";
 import React from "react";
 
 type Props = {
@@ -85,8 +85,8 @@ const QuestionBankSidebar = ({
             <option value="">Select a topic</option>
             {courseId &&
               mappedData
-                .find((course) => course.courseId === courseId)
-                ?.topics.map((chapter) => (
+                .find((course:any) => course.courseId === courseId)
+                ?.topics.map((chapter:any) => (
                   <option key={chapter.topics} value={chapter.topics}>
                     {chapter.topics}
                   </option>
@@ -109,9 +109,9 @@ const QuestionBankSidebar = ({
             <option value="">Select a Sub Topic</option>
             {topic &&
               mappedData
-                .find((course) => course.courseId === courseId)
-                ?.topics.find((t) => t.topics === topic)
-                ?.subtopics.map((sub) => (
+                .find((course:any) => course.courseId === courseId)
+                ?.topics.find((t:any) => t.topics === topic)
+                ?.subtopics.map((sub:any) => (
                   <option key={sub} value={sub}>
                     {sub}
                   </option>

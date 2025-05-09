@@ -31,7 +31,7 @@ const UserEnrollmentActions = dynamic(() => import('./UserEnrollmentActions'), {
 
 const EnrolledUsers: FC<Props> = ({ id }) => {
   const { theme } = useTheme();
-  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [, setRefreshTrigger] = useState(0);
   const [rows, setRows] = useState<EnrolledUser[]>([]);
   
   // Queries with automatic refetching
@@ -91,8 +91,8 @@ const EnrolledUsers: FC<Props> = ({ id }) => {
     
     if (isUnenrollError && unenrollError) {
       let errorMsg = "Failed to unenroll user";
-      if ('data' in unenrollError) {
-        errorMsg = unenrollError.data?.message || errorMsg;
+      if ('data' in unenrollError && typeof unenrollError.data === 'object' && unenrollError.data && 'message' in unenrollError.data) {
+        errorMsg = (unenrollError.data as { message: string }).message || errorMsg;
       }
       toast.error(errorMsg);
     }
@@ -109,9 +109,8 @@ const EnrolledUsers: FC<Props> = ({ id }) => {
   const handleUnenroll = async (userId: string, courseId: string) => {
     try {
       await unEnrollUser({ userId, courseId }).unwrap();
-    } catch (error) {
-      // Error is handled in the useEffect
-    }
+    } catch  {
+      toast.error("Failed to unenroll user");}
   };
 
   const columns: GridColDef[] = [
@@ -248,7 +247,7 @@ const EnrolledUsers: FC<Props> = ({ id }) => {
                 },
               }}
               pageSizeOptions={[5, 10, 20]}
-              getRowClassName={(params) => 
+              getRowClassName={() => 
                 isUnenrolling ? "opacity-50" : ""
               }
             />

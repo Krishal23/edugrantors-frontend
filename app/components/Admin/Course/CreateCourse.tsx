@@ -23,11 +23,11 @@ const CoursePreview = dynamic(() => import('./CoursePreview'), {
 });
 
 
-type Props = {}
 
-const CreateCourse = (props: Props) => {
+
+const CreateCourse = () => {
     const [createCourse, {isLoading, isSuccess,error}] = useCreateCourseMutation();
-    const { data, refetch } = useGetAllCourseQuery({},{ refetchOnMountOrArgChange: true });
+    const {  refetch } = useGetAllCourseQuery({},{ refetchOnMountOrArgChange: true });
     
 
     useEffect(()=>{
@@ -108,7 +108,7 @@ const CreateCourse = (props: Props) => {
 
     };
 
-    const handleCourseCreate =async (e: any) => {
+    const handleCourseCreate =async () => {
         const data = courseData;
         if(!isLoading){
             await createCourse(data)

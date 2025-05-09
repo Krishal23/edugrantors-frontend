@@ -1,6 +1,5 @@
 import {redirect} from 'next/navigation'
 import userAuth from "./userAuth"
-import toast from 'react-hot-toast';
 
 interface ProtectedProps{
     children :React.ReactNode;

@@ -10,37 +10,7 @@ const QuestionInfoForm = dynamic(() => import('./QuestionInfoForm'), {
 });
 
 
-type Question = {
-  _id: string;
-  courseId: string;
-  topic: string;
-  subTopic: string;
-  type: string;
-  question: string;
-  image?: any;
-  imageExplain?:any;
-  options: { text: string; isCorrect: boolean }[];
-  correctAnswer: string | number | string[];
-  marks: number;
-  negativeMarks: number;
-  explanation: string;
-  createdBy: { _id: string; name: string; email: string };
-  createdAt: string;
-};
-
-type Props ={
-  onClose: () => void;
-  mappedData:any
-  isEdit?:boolean
-  courseId?: string; 
-  topic?: string; 
-  subTopic?: string; 
-  type?: string;
-  question?: Question;
-  queId?:string;
-  refetch?:any;
-}
-const AddQuestionPopup= ({ onClose,mappedData,courseId,topic,subTopic,type,question,isEdit,queId,refetch }:Props) => {
+const AddQuestionPopup= ({ onClose,mappedData,courseId,topic,subTopic,type,question,isEdit,queId,refetch }:any) => {
 
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({

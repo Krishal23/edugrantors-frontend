@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { RiPriceTag2Fill } from "react-icons/ri";
@@ -10,13 +12,13 @@ import {
 } from "react-icons/fa";
 import {
   useAddCouponMutation,
-  useGetUsersMarksAdminQuery,
+  // useGetUsersMarksAdminQuery,
   useToggleCoursePublicityMutation,
   useUpdateTestMutation,
 } from "@/app/redux/features/courses/coursesApi";
-import { SiQuizlet } from "react-icons/si";
-import { MdEditSquare, MdOnlinePrediction } from "react-icons/md";
-import { GrSend } from "react-icons/gr";
+// import { SiQuizlet } from "react-icons/si";
+// import { MdEditSquare, MdOnlinePrediction } from "react-icons/md";
+// import { GrSend } from "react-icons/gr";
 import toast from "react-hot-toast";
 import { useLoadUserQuery } from "@/app/redux/features/api/apiSlice";
 import dynamic from "next/dynamic";

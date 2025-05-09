@@ -5,7 +5,7 @@ import React, { FC, useState } from 'react';
 type Props  = {}
 
 const DashboardHeader: FC<Props> = () => {
-    const [open, setOpen] = useState(false)
+    const [open, ] = useState(false)
     return (
         <div className="w-full  text-gray-900 dark:text-white flex gap-4 items-center absolute z-1000 justify-end p-6  top-5 right-0">
           <div className="flex justify-center items-center">

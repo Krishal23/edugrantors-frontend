@@ -19,17 +19,11 @@ const QuizDetailsPreview = dynamic(() => import('@/app/components/Admin/Course/Q
 });
 
 
-type Props = {
-    courseId: any;
-    quizId: any;
-    isEdit?: boolean;
-}
-
 const QuizDetailsAdmin = ({
     courseId,
     quizId,
     isEdit
-}: Props) => {
+}: any) => {
     const { theme } = useTheme();
     const [selectedQuestions, setSelectedQuestions] = useState<string[]>([]); // Track selected questions
 
@@ -42,10 +36,10 @@ const QuizDetailsAdmin = ({
     const courseName=data?.courseName
 
 
-    const [updateTest, { isSuccess, error }] = useUpdateTestMutation();
+    const [updateTest] = useUpdateTestMutation();
     const [deleteQuestion] = useDeleteQuestionMutation();
 
-    const [isFabClicked, setIsFabClicked] = useState(false); // To toggle FAB options
+    const [, setIsFabClicked] = useState(false); // To toggle FAB options
     const [isPopupOpen, setIsPopupOpen] = useState(false); // To control popup visibility
 
     const handleFabClick = () => {
@@ -115,7 +109,7 @@ const QuizDetailsAdmin = ({
                     totalQuestion: data?.quiz?.questions.length,
                     attemptedBy: data?.quiz?.attemptedBy
                 }}
-                isEdit={isEdit}
+                isEdit={isEdit ?? false}
                 courseName={courseName}
             />
 
@@ -149,7 +143,7 @@ const QuizDetailsAdmin = ({
 
                                 <QuestionBank
                                     isQuiz={true}
-                                    isEdit={isEdit}
+                                    isEdit={isEdit ?? false}
                                     selectedQuestions={selectedQuestions}
                                     setSelectedQuestions={setSelectedQuestions}
                                 />
@@ -194,7 +188,7 @@ const QuizDetailsAdmin = ({
                 {data?.quiz?.questions.length === 0 ? (
                     <p>No questions added yet.</p>
                 ) : (
-                    data?.quiz?.questions.map((question, index) => (
+                    data?.quiz?.questions.map((question:any, index:any) => (
                         <QuestionCard
                             key={index}
                             index={index}

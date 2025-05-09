@@ -100,7 +100,8 @@ const CourseDetails: FC<Props> = ({ setOpen: setLogin, id }) => {
   // Handle coupon validation errors
   useEffect(() => {
     if (couponValidationError && "data" in couponValidationError) {
-      const errorMessage = couponValidationError.data?.message || "Invalid coupon";
+      const errorData = couponValidationError.data as { message?: string };
+      const errorMessage = errorData?.message || "Invalid coupon";
       setCouponError(errorMessage);
     }
   }, [couponValidationError]);
@@ -136,8 +137,9 @@ const CourseDetails: FC<Props> = ({ setOpen: setLogin, id }) => {
       setDiscountedPrice(newPrice);
       
       toast.success(`Coupon applied! You saved ${(price - newPrice).toFixed(2)} Rs.`);
-    } catch (error) {
+    } catch  {
       // Error is handled in useEffect
+      setCouponError("Invalid or expired coupon");
     }
   };
 
@@ -191,7 +193,7 @@ const CourseDetails: FC<Props> = ({ setOpen: setLogin, id }) => {
             toast.success("Payment successful! You are now enrolled.");
             await refreshData();
             setCouponPop(false);
-          } catch (error) {
+          } catch  {
             toast.error("Failed to update enrollment status.");
           } finally {
             setIsEnrolling(false);
@@ -209,7 +211,7 @@ const CourseDetails: FC<Props> = ({ setOpen: setLogin, id }) => {
       
       razorpayInstance.open();
       
-    } catch (error) {
+    } catch  {
       toast.error("Payment initialization failed. Please try again.");
       setIsEnrolling(false);
     }
@@ -390,7 +392,7 @@ const CourseDetails: FC<Props> = ({ setOpen: setLogin, id }) => {
               What will you learn from this Course:
             </h4>
             {benefits.length > 0 ? (
-              benefits.map((item, index) => (
+              benefits.map((item:any, index:any) => (
                 <div
                   className="w-full flex py-2 dark:text-gray-400 text-gray-700 leading-relaxed"
                   key={index}
@@ -411,7 +413,7 @@ const CourseDetails: FC<Props> = ({ setOpen: setLogin, id }) => {
               Prerequisites:
             </h4>
             {prerequisites.length > 0 ? (
-              prerequisites.map((item, index) => (
+              prerequisites.map((item:any, index:any) => (
                 <div
                   className="w-full flex py-2 dark:text-gray-400 text-gray-700 leading-relaxed"
                   key={index}

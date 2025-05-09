@@ -1,7 +1,7 @@
+'use client'
 import { useGetCouponsQuery, useToggleCouponActiveMutation } from "@/app/redux/features/courses/coursesApi";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
-import { BsFillLightbulbOffFill } from "react-icons/bs";
 import { FiX, FiEye, FiEyeOff, FiGlobe } from "react-icons/fi";
 import { MdPublicOff } from "react-icons/md";
 
@@ -9,6 +9,16 @@ type Props = {
   courseId: string;
   onClose: () => void;
 };
+
+interface Coupon {
+  _id: string;
+  couponId: string;
+  discount: number;
+  isActive: boolean;
+  beneficiary: string[];
+  maxAllowed: number;
+  validity: string;
+}
 
 const AvailableCouponPop = ({ courseId, onClose }: Props) => {
   const { data, isLoading, refetch } = useGetCouponsQuery(
@@ -48,7 +58,7 @@ const AvailableCouponPop = ({ courseId, onClose }: Props) => {
       <h2 className="text-xl font-semibold text-center mb-4">Available Coupons</h2>
       {data?.coupons?.length ? (
         <ul className="space-y-3">
-          {data.coupons.map((coupon: any) => (
+          {data.coupons.map((coupon: Coupon) => (
             <li
               key={coupon._id}
               className="p-4 bg-gray-800 rounded-md hover:bg-gray-700 transition duration-300"

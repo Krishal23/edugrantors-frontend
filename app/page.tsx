@@ -25,7 +25,7 @@ const Footer = dynamic(() => import("./components/Footer"), {
 
 const Page = () => {
   const [open, setOpen] = useState(false);
-  const [activeItem, setActiveItem] = useState(0);
+  const [activeItem,] = useState(0);
   const [route, setRoute] = useState("Login");
 
   return (

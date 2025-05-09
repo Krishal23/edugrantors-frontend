@@ -23,16 +23,14 @@ const CoursePreview = dynamic(() => import('./CoursePreview'), {
 });
 
 
-type Props = {
-    id: string;
-}
+
 
 const EditCourse = ({ id }: any) => {
 
     const[editCourse, {isSuccess, error}]= useEditCourseMutation();
 
 
-    const { data, isLoading, refetch } = useGetAllCourseQuery({}, { refetchOnMountOrArgChange: true });
+    const { data, isLoading } = useGetAllCourseQuery({}, { refetchOnMountOrArgChange: true });
 
     const editCourseData = data && data.courses.find((i: any) => i._id === id);
 
@@ -134,7 +132,7 @@ const EditCourse = ({ id }: any) => {
 
     };
 
-    const handleCourseCreate = async (e: any) => {
+    const handleCourseCreate = async () => {
         const data = courseData;
         
         await editCourse({id: editCourseData?._id ,data})

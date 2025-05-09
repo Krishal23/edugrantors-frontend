@@ -1,29 +1,7 @@
 import React from "react";
-import { FaCheckCircle, FaTimesCircle, FaTrashAlt } from "react-icons/fa";
+import { FaCheckCircle, FaTrashAlt } from "react-icons/fa";
 
-type Option = {
-  text: string;
-  isCorrect: boolean;
-};
-
-type QuestionProps = {
-  courseId: any;
-  quizId: any;
-  questionId: string;
-  question: string;
-  options: Option[];
-  marks: number;
-  negativeMarks?: number;
-  explanation: string;
-  index: number;
-  type: string;
-  correctAnswer: any;
-  image: any;
-  isEdit?: boolean;
-  handleRemove?: (courseId: string, quizId: string, questionId: string) => void;
-};
-
-const QuestionCard: React.FC<QuestionProps> = ({
+const QuestionCard= ({
   courseId,
   quizId,
   correctAnswer,
@@ -37,7 +15,7 @@ const QuestionCard: React.FC<QuestionProps> = ({
   explanation,
   index,
   image,
-}) => {
+}:any) => {
   return (
     <div className="p-6 bg-gradient-to-r from-gray-800 to-gray-900 rounded-xl shadow-lg mb-6 hover:shadow-2xl transition-all duration-300">
       {/* Question Text */}
@@ -67,7 +45,7 @@ const QuestionCard: React.FC<QuestionProps> = ({
 
       {/* Options */}
       <div className="mt-4 space-y-3">
-        {options.map((option, optionIndex) => {
+        {options.map((option:any, optionIndex:any) => {
           return (
             <div key={optionIndex} className="flex items-center space-x-3">
               <div

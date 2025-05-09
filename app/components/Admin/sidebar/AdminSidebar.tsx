@@ -1,21 +1,21 @@
 "use client";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Box, IconButton, Typography } from "@mui/material";
 import "react-pro-sidebar/dist/css/styles.css";
-import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+// import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
-import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
+// import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
 import VideoCallIcon from "@mui/icons-material/VideoCall";
 import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
 import WebIcon from "@mui/icons-material/Web";
-import QuizIcon from "@mui/icons-material/Quiz";
-import ManageHistoryIcon from "@mui/icons-material/ManageHistory";
-import SettingsIcon from "@mui/icons-material/Settings";
-import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import AnalyticsIcon from "@mui/icons-material/Analytics";
+// import QuizIcon from "@mui/icons-material/Quiz";
+// import ManageHistoryIcon from "@mui/icons-material/ManageHistory";
+// import SettingsIcon from "@mui/icons-material/Settings";
+// import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+// import AnalyticsIcon from "@mui/icons-material/Analytics";
 import Diversity3Icon from "@mui/icons-material/Diversity3";
 
 // Fixed typo in path

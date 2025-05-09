@@ -1,8 +1,8 @@
 "use client"
 import React, { useEffect, useState } from 'react';
-import { DataGrid } from "@mui/x-data-grid";
-import { Box, Button, Modal, Typography } from '@mui/material';
-import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
+import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
+import { Box, Modal, Typography } from '@mui/material';
+import { AiOutlineEdit } from 'react-icons/ai';
 import { useTheme } from 'next-themes';
 import { useDeleteCourseMutation, useGetAllCourseQuery } from '@/app/redux/features/courses/coursesApi';
 import Loader from '../../Loader/Loader';
@@ -10,27 +10,37 @@ import { format } from 'timeago.js';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
 
+interface CourseRow {
+    id: string;
+    title: string;
+    purchased: string;
+    ratings: string;
+    created_at: string;
+    updated_at: string;
+}
+
 const AllCourses = () => {
     const { theme } = useTheme();
 
     const [open, setOpen] = useState(false)
-    const [courseId, setCourseId] = useState("")
+    const [courseId] = useState("")
     const [deleteCourse, { isSuccess, error }] = useDeleteCourseMutation({})
 
     const { data, isLoading, refetch } = useGetAllCourseQuery({},{ refetchOnMountOrArgChange: true });
 
 
-    const rows: any[] = [];
+
+    const rows: CourseRow[] = [];
 
     if (data && data.courses) {
-        data.courses.forEach((item: any) => {
+        data.courses.forEach((item:CourseRow) => {
             rows.push({
-                id: item._id,
-                title: item.name || "",
+                id: item.id,
+                title: item.title || "",
                 purchased: item.purchased || "N/A",
                 ratings: item.ratings || "null",
-                created_at: format(item.createdAt),
-                updated_at: format(item.updatedAt),
+                created_at: format(item.created_at),
+                updated_at: format(item.updated_at),
             });
         });
     }
@@ -42,7 +52,7 @@ const AllCourses = () => {
             headerName: "Course Title",
             minWidth: 200,
             flex: 1,
-            renderCell: (params: any) => (
+            renderCell: (params: GridRenderCellParams<CourseRow>) => (
                 <Link href={`/admin/course/${params.row.id}`} passHref>
                     {params.row.title}
 
@@ -58,7 +68,7 @@ const AllCourses = () => {
             headerName: "Edit",
             minWidth: 100,
             flex: 0.2,
-            renderCell: (params: any) => (
+            renderCell: (params: GridRenderCellParams<CourseRow>) => (
                 <Link href={`/admin/edit-course/${params.row.id}`} className='flex justify-center items-center h-full'>
                     <AiOutlineEdit
                         className={theme === "dark" ? "text-white" : "text-black"}
@@ -99,7 +109,7 @@ const AllCourses = () => {
         }
         if (error) {
             if ("data" in error) {
-                const errorMessage = error as any;
+                const errorMessage = error as { data: { message: string } };
                 toast.error(errorMessage.data.message);
             }
         }

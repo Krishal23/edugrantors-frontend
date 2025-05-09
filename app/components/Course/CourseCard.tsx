@@ -18,8 +18,6 @@ const img = "/assets/4.jpg";
 
 const CourseCard: React.FC<CourseCardProps> = ({
   item,
-  id,
-  thumbnail,
   title,
   description,
   isProfile,
@@ -33,8 +31,8 @@ const CourseCard: React.FC<CourseCardProps> = ({
           <img
             src={item.thumbnail ? item.thumbnail.url : img}
             alt={title}
-            layout="fill"
-            objectFit="cover"
+            // layout="fill"
+            // objectFit="cover"
             className="rounded-md"
           />
         </div>

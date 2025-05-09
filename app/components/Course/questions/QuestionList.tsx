@@ -14,7 +14,7 @@ type Props = {
 }
 
 
-const QuestionList = ({ data,refetch, activeVideo, handleAnswerSubmit, user, setQuestionId, answerCreationLoading,courseId,contentId }: Props) => {
+const QuestionList = ({ data,refetch, activeVideo, handleAnswerSubmit, setQuestionId, answerCreationLoading,courseId,contentId }: Props) => {
   return (
     <div className="w-full mb-auto p-4 rounded-lg shadow-lg">
       <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-200 flex items-center gap-2">

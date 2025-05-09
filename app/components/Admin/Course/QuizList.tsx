@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useState } from "react";
 import AttemptsPopup from "./AttemptsPopup";
 import { SiQuizlet } from "react-icons/si";

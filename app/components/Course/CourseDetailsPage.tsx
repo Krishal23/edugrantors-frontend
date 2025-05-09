@@ -18,7 +18,7 @@ const CourseDetailsPage = ({ id }: Props) => {
     
     const [route, setRoute] = useState("Login");
     const [open, setOpen] = useState(false);
-    const { data, isLoading, isError,refetch } = useGetCourseDetailsQuery(id); 
+    const { data, isLoading, isError } = useGetCourseDetailsQuery(id); 
 
     if (isError) {
         return <div>Error loading course details. Please try again.</div>;

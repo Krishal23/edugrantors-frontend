@@ -9,11 +9,11 @@ const RenderCourses = ({ userData }: any) =>
 
   function mapUserCoursesWithNames2(userData: any, allCourses: any) {
     // Create a map of course IDs to course names
-    const courseMap = new Map(allCourses?.courses?.map(course => [course._id, course.name]));
+    const courseMap = new Map(allCourses?.courses?.map((course:any) => [course._id, course.name]));
   
     // Helper function to update course arrays with names
     const updateCoursesWithNames = (courses: any) => {
-      return courses.map(course => ({
+      return courses.map((course:any) => ({
         ...course,
         name: courseMap.get(course.courseId) || 'Unknown Course'
       }));
@@ -40,7 +40,7 @@ console.log(userData);
       {userData.courses.length === 0 ? (
         <p className="text-gray-400">No courses enrolled yet.</p>
       ) : (
-        userData.courses.map((course, idx) => (
+        userData.courses.map((course:any, idx:any) => (
           <Link href={`/admin/course/${course.courseId}`} key={idx}>
             <div
               className="p-4 bg-gray-700 rounded-lg flex gap-2 items-center justify-between cursor-pointer hover:bg-gray-600"
@@ -60,7 +60,7 @@ console.log(userData);
           {userData.coursesCreated.length === 0 ? (
             <p className="text-gray-400">No courses created yet.</p>
           ) : (
-            userData.coursesCreated.map((course, idx) => (
+            userData.coursesCreated.map((course:any, idx:any) => (
               <Link href={`/admin/course/${course.courseId}`} key={idx}>
                 <div
                   className="p-4 bg-gray-700 rounded-lg flex gap-2 items-center justify-between cursor-pointer hover:bg-gray-600"

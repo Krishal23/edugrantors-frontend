@@ -23,7 +23,7 @@ export const authApi = apiSlice.injectEndpoints({
         body: data,
         credentials: "include",
       }),
-      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+      async onQueryStarted(_arg, { queryFulfilled, dispatch }) {
         try {
           const result = await queryFulfilled;
           dispatch(
@@ -56,7 +56,7 @@ export const authApi = apiSlice.injectEndpoints({
         },
         credentials: "include" as const,
       }),
-      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+      async onQueryStarted(_arg, { queryFulfilled, dispatch }) {
         try {
           const result = await queryFulfilled;
           dispatch(
@@ -81,7 +81,7 @@ export const authApi = apiSlice.injectEndpoints({
         },
         credentials: "include" as const,
       }),
-      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+      async onQueryStarted(_arg, { queryFulfilled, dispatch }) {
         try {
           const result = await queryFulfilled;
           dispatch(
@@ -101,7 +101,7 @@ export const authApi = apiSlice.injectEndpoints({
         method: "GET",
         credentials: "include" as const,
       }),
-      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+      async onQueryStarted(_arg, { queryFulfilled, dispatch }) {
         try {
           await queryFulfilled; // Make sure to wait for the logout request to finish
           dispatch(userLoggedOut());

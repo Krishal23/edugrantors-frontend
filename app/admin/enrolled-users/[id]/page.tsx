@@ -1,7 +1,6 @@
 'use client'
 
 import React from 'react'
-import { useGetEnrolledUsersQuery } from '@/app/redux/features/user/userApi';
 import AdminProtected from '@/app/hooks/adminProtected';
 import Heading from '@/app/utils/Heading';
 import dynamic from 'next/dynamic';
@@ -22,9 +21,13 @@ const EnrolledUsers = dynamic(() => import('@/app/components/Admin/Course/Enroll
 });
 
 
-type Props = {}
+interface PageProps {
+  params: {
+    id: string;
+  };
+}
 
-const page = ({params}: any) => {
+const page = ({params}: PageProps) => {
     const id= params.id
     
   return (

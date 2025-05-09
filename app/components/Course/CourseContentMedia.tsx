@@ -28,7 +28,7 @@ type Props = {
 const CourseContentMedia = ({ data, id, activeVideo, setActiveVideo, user, refetch }: Props) => {
   const [activeTab, setActiveTab] = useState(0)
   const [question, setQuestion] = useState("")
-  const [questionId, setQuestionId] = useState("")
+  const [, setQuestionId] = useState("")
 
 
   const [addNewQuestion, { isSuccess, error, isLoading: questionCreationLoading }] = useAddNewQuestionMutation()

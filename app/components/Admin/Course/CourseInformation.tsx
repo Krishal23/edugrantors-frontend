@@ -1,3 +1,5 @@
+'use client'
+
 import React, { FC, useState } from "react";
 import { useTheme } from "next-themes";
 
@@ -27,7 +29,7 @@ const CourseInformation: FC<Props> = ({
     const file = e.target.files?.[0]; // Get the first file
     if (file) {
       const reader = new FileReader();
-      reader.onload = (e: any) => {
+      reader.onload = () => {
         if (reader.readyState === 2) {
           setCourseInfo({ ...courseInfo, thumbnail: reader.result });
         }

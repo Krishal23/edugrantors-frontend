@@ -1,19 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { QuestionType } from "./QuestionForm";
 
-type Props = {
-  question: QuestionType;
-  setQuestions: (questions: QuestionType[]) => void;
-  index: number;
-};
-
-const PhraseQuestion = ({ question, setQuestions, index }: Props) => {
+const PhraseQuestion = ({ question, setQuestions, index }: any) => {
   const [dragging, setDragging] = useState(false);
 
   // Initialize default correctAnswer if none exists
   useEffect(() => {
     if (!question.correctAnswer) {
-      setQuestions((prevQuestions) => {
+      setQuestions((prevQuestions:any) => {
         const updatedQuestions = [...prevQuestions];
         updatedQuestions[index] = {
           ...updatedQuestions[index],
@@ -28,7 +21,7 @@ const PhraseQuestion = ({ question, setQuestions, index }: Props) => {
     field: "question" | "explanation" | "marks",
     value: string | number
   ) => {
-    setQuestions((prevQuestions) => {
+    setQuestions((prevQuestions:any) => {
       const updatedQuestions = [...prevQuestions];
       updatedQuestions[index] = { ...updatedQuestions[index], [field]: value };
       return updatedQuestions;
@@ -36,7 +29,7 @@ const PhraseQuestion = ({ question, setQuestions, index }: Props) => {
   };
 
   const handleAnswerChange = (value: string) => {
-    setQuestions((prevQuestions) => {
+    setQuestions((prevQuestions:any) => {
       const updatedQuestions = [...prevQuestions];
       updatedQuestions[index] = {
         ...updatedQuestions[index],
@@ -51,7 +44,7 @@ const PhraseQuestion = ({ question, setQuestions, index }: Props) => {
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
-        setQuestions((prevQuestions) => {
+        setQuestions((prevQuestions:any) => {
           const updatedQuestions = [...prevQuestions];
           updatedQuestions[index] = {
             ...updatedQuestions[index],
@@ -81,7 +74,7 @@ const PhraseQuestion = ({ question, setQuestions, index }: Props) => {
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
-        setQuestions((prevQuestions) => {
+        setQuestions((prevQuestions:any) => {
           const updatedQuestions = [...prevQuestions];
           updatedQuestions[index] = {
             ...updatedQuestions[index],
@@ -158,7 +151,7 @@ const PhraseQuestion = ({ question, setQuestions, index }: Props) => {
             className="mt-3 text-sm bg-red-700 p-2 rounded-md text-gray-100 hover:bg-red-600"
             onClick={(e) => {
               e.stopPropagation();
-              setQuestions((prevQuestions) => {
+              setQuestions((prevQuestions:any) => {
                 const updatedQuestions = [...prevQuestions];
                 updatedQuestions[index] = {
                   ...updatedQuestions[index],

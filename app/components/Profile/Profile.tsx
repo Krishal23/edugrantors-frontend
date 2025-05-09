@@ -24,7 +24,7 @@ type Props = {};
 
 const Profile: FC<Props> = () => {
     const [scroll, setScroll] = useState(false);
-    const [avatar, setAvatar] = useState(null);
+    const [avatar, ] = useState(null);
     const [active, setActive] = useState(1);
     const [logout, setLogout] = useState(false);
 

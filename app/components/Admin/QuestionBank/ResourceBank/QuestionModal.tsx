@@ -1,22 +1,10 @@
-import { Question, QuestionType, QuestionOptionValue } from '@/app/types/question';
+import {  QuestionType } from '@/app/types/question';
 import EvaluateAnswer from "@/app/utils/EvaluateAnswer";
 import React from "react";
 
-interface QuestionModalProps {
-  question: Question;
-  selectedOption: QuestionOptionValue | null;
-  isSubmitted: boolean;
-  handleOptionChange: (option: QuestionOptionValue) => void;
-  handleSubmit: () => void;
-  handlePrevious: () => void;
-  handleNext: () => void;
-  closeModal: () => void;
-  currentQuestionIndex: number;
-  totalQuestions: number;
-}
 
 // QuestionModal Component
-const QuestionModal: React.FC<QuestionModalProps> = ({
+const QuestionModal= ({
   question,
   selectedOption,
   isSubmitted,
@@ -27,7 +15,7 @@ const QuestionModal: React.FC<QuestionModalProps> = ({
   closeModal,
   currentQuestionIndex,
   totalQuestions,
-}) => {
+}:any) => {
   if (!question) return null;
 
   const { isCorrect, userAnswer } = isSubmitted
@@ -37,7 +25,7 @@ const QuestionModal: React.FC<QuestionModalProps> = ({
   const renderOptions = () => {
     switch (question.type) {
       case QuestionType.Single:
-        return question.options?.map((option, index) => (
+        return question.options?.map((option:any, index:any) => (
           <div key={index} className="flex items-center space-x-2 mb-2">
             <input
               type="radio"
@@ -54,7 +42,7 @@ const QuestionModal: React.FC<QuestionModalProps> = ({
         ));
 
       case QuestionType.Multiple:
-        return question.options?.map((option, index) => (
+        return question.options?.map((option:any, index:any) => (
           <div key={index} className="flex items-center space-x-2 mb-2">
             <input
               type="checkbox"

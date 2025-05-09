@@ -1,6 +1,6 @@
 'use client';
 import React, { FC, useState, useEffect } from 'react';
-import { AiFillGithub, AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
+import {  AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { useTheme } from 'next-themes';
 import { useRegisterMutation } from '../../redux/features/auth/authApi';
 import toast from 'react-hot-toast';
@@ -16,7 +16,7 @@ const SignUp: FC<{
     submissionDataStore:any;
     setSubmissionDataStore:(submissionDataStore:any)=>void
 
- }> = ({ setRoute,isResend,setIsResend,submissionDataStore,setSubmissionDataStore }) => {
+ }> = ({ setRoute,isResend,submissionDataStore,setSubmissionDataStore }) => {
     const { theme } = useTheme();
     const [register, { data, isSuccess, error }] = useRegisterMutation();
     console.log("submissiondata",submissionDataStore)
@@ -31,7 +31,7 @@ const SignUp: FC<{
         stream: '',
         targetYear: '',
     });
-    const [errors, setErrors] = useState({});
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [showPassword, setShowPassword] = useState(false);
     const [selectedClass, setSelectedClass] = useState("");
     const [stream, setStream] = useState("");
@@ -97,11 +97,11 @@ console.log(isResend,"hjk")
     };
 
 
-    const handleResend=async()=>{
-        toast.success("resending   aefa")     
-        console.log(submissionDataStore);
+    // const handleResend=async()=>{
+    //     toast.success("resending   aefa")     
+    //     console.log(submissionDataStore);
 
-    }
+    // }
 
 
     const inputClass = theme === 'dark'

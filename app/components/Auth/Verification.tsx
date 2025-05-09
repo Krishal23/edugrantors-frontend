@@ -21,7 +21,7 @@ type VerifyNumber = {
     "3": string;
 }
 
-const Verification: FC<Props> = ({ setRoute, submissionDataStore, setSubmissionDataStore, setIsResend, isResend }) => {
+const Verification: FC<Props> = ({ setRoute, submissionDataStore}) => {
     const { token } = useSelector((state: any) => state.auth);
     const [activation, { isSuccess, error }] = useActivationMutation();
     const { theme } = useTheme();
@@ -111,15 +111,23 @@ const Verification: FC<Props> = ({ setRoute, submissionDataStore, setSubmissionD
         setVerifyNumber(newVerifyNumber);
 
         if (value === "" && index > 0) {
-            inputRefs[index - 1].current?.focus();
+            const nextInput = inputRefs[index - 1];
+            // inputRefs[index - 1].current?.focus();
+            if (nextInput && nextInput.current) {
+                nextInput.current.focus();
+            }
         } else if (value.length === 1 && index < 3) {
-            inputRefs[index + 1].current?.focus();
+            const nextInput = inputRefs[index + 1];
+            // inputRefs[index + 1].current?.focus();
+            if (nextInput && nextInput.current) {
+                nextInput.current.focus();
+            }
         }
     }
 
     // Dynamic theme-based classes
     const containerClass = theme === 'dark' ? 'bg-gray-900 text-white' : 'text-gray-900';
-    const formClass = theme === 'dark' ? 'bg-gray-800' : 'bg-white';
+    // const formClass = theme === 'dark' ? 'bg-gray-800' : 'bg-white';
     const inputClass = theme === 'dark' ? 'border-gray-600 focus:border-indigo-500 bg-gray-700 text-gray-200' : 'border-gray-300 focus:border-indigo-500 bg-gray-50';
     const buttonClass = theme === 'dark' ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-indigo-500 hover:bg-indigo-600';
     const errorClass = 'text-red-500 text-sm mt-1';
@@ -142,7 +150,7 @@ const Verification: FC<Props> = ({ setRoute, submissionDataStore, setSubmissionD
                         key={key}
                         ref={inputRefs[index]}
                         maxLength={1}
-                        value={verifyNumber[key as keyof verifyNumber]}
+                        value={verifyNumber[key as keyof VerifyNumber]}
 
                         onChange={(e) => handleInputChange(index, e.target.value)}
                         className={`w-12 h-12 m-[2px] text-center text-2xl border rounded-md ${inputClass} ${invalidError
@@ -165,7 +173,7 @@ const Verification: FC<Props> = ({ setRoute, submissionDataStore, setSubmissionD
             </button>
 
             <p className={`mt-4 text-center ${containerClass}`}>
-                Didn't receive a code?{" "}
+                Didn&apos;t receive a code?{" "}
                 {resendAvailable ? (
                     <span
                         className="text-[#2190ff] cursor-pointer"

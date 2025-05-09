@@ -4,7 +4,7 @@ import { userLoggedIn } from "../auth/authSlice";
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_SERVER_URI,
+    baseUrl: process.env.NEXT_PUBLIC_SERVER_URI || 'http://localhost:8000',
     credentials: "include",
   }),
   endpoints: (builder) => ({
@@ -19,7 +19,7 @@ export const apiSlice = createApi({
         url: "/me",
         method: "GET",
       }),
-      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+      async onQueryStarted(_arg, { queryFulfilled, dispatch }) {
         try {
           const result = await queryFulfilled;
     

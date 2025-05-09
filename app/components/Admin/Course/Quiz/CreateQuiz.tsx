@@ -43,7 +43,7 @@ export interface QuestionType {
 const CreateQuiz: React.FC = () => {
 
   const [activeStep, setActiveStep] = useState<number>(0);
-  const [quizDetails, setQuizDetails] = useState<QuizDetailsType>({
+  const [quizDetails, setQuizDetails] = useState<any>({
     courseId: '',
     title: '',
     description: '',

@@ -35,7 +35,7 @@ const QuizQuestion = ({
   const isFirstQuestion = currentQuestionIndex === 0;
   const [submitPop, setSubmitPop] = useState(false);
 
-  const [attemptTest, { isLoading }] = useAttemptTestMutation();
+  const [attemptTest] = useAttemptTestMutation();
 
   const [selectedAnswer, setSelectedAnswer] = useState<any>(
     question.type === "multiple" ? [] : null

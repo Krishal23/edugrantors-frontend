@@ -53,7 +53,7 @@ const QuizReview = ({ quizId, courseId }: Props) => {
         startTime={startTime}
         />
 
-        {questions.map((question, index) => (
+        {questions.map((question:any, index:any) => (
           <ReviewCard key={index} index={index}  question={question} />
         ))}
       </div>

@@ -10,38 +10,14 @@ const QuestionModal = dynamic(() => import("./QuestionModal"), {
   loading: () => <Loader message="Loading Terms and Conditions..." />,
 })
 
-interface Question {
-  _id: string
-  question: string
-  courseId: string
-  topic: string
-  subTopic: string
-  type: string
-  marks: number
-  negativeMarks: number
-  explanation: string
-  options: { text: string; isCorrect: boolean }[]
-  correctAnswer: string | string[]
-  image?: { url: string }
-}
-
-interface QuestionCardProps {
-  questions: Question[]
-  allQuestions: Question[] // All filtered questions across all pages
-  currentPage: number
-  totalPages: number
-  questionsPerPage: number
-  onPageChange: (page: number) => void
-}
-
-const QuestionCard: React.FC<QuestionCardProps> = ({
+const QuestionCard = ({
   questions,
   allQuestions,
   currentPage,
   totalPages,
   questionsPerPage,
   onPageChange,
-}) => {
+}:any) => {
   // This tracks the index within the current page's questions array
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number | null>(null)
   const [selectedOption, setSelectedOption] = useState<number | null>(null)
@@ -117,7 +93,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
   return (
     <div className="p-4 md:p-6 text-black dark:bg-gray-900 dark:text-gray-100">
       {/* Render a list of questions */}
-      {questions.map((question, index) => (
+      {questions.map((question:any, index:any) => (
         <div
           key={question._id}
           className="border border-gray-700 flex flex-col md:flex-row justify-between items-start md:items-center rounded-md mb-4 p-4 shadow-md dark:bg-gray-800 dark:hover:bg-gray-700 transition-all"

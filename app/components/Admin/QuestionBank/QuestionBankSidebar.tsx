@@ -63,7 +63,7 @@ const QuestionBankSidebar = ({
             className="w-full bg-gray-700 text-white p-2 rounded-lg mt-2"
           >
             <option value="">Select a Course</option>
-            {mappedData.map((course) => (
+            {mappedData.map((course:any) => (
               <option key={course.courseId} value={course.courseId}>
                 {course.name}
               </option>
@@ -86,8 +86,8 @@ const QuestionBankSidebar = ({
             <option value="">Select a topic</option>
             {courseId &&
               mappedData
-                .find((course) => course.courseId === courseId)
-                ?.topics.map((chapter) => (
+                .find((course:any) => course.courseId === courseId)
+                ?.topics.map((chapter:any) => (
                   <option key={chapter.topics} value={chapter.topics}>
                     {chapter.topics}
                   </option>
@@ -110,9 +110,9 @@ const QuestionBankSidebar = ({
             <option value="">Select a Sub Topic</option>
             {topic &&
               mappedData
-                .find((course) => course.courseId === courseId)
-                ?.topics.find((t) => t.topics === topic)
-                ?.subtopics.map((sub) => (
+                .find((course:any) => course.courseId === courseId)
+                ?.topics.find((t:any) => t.topics === topic)
+                ?.subtopics.map((sub:any) => (
                   <option key={sub} value={sub}>
                     {sub}
                   </option>

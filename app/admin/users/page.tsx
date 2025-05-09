@@ -14,9 +14,9 @@ const AllUsers = dynamic(() => import('@/app/components/Admin/Course/AllUsers'),
   loading: () => <Loader />
 });
 
-type Props = {}
 
-const page = (props: Props) => {
+
+const page = () => {
   return (
     <div>
       <AdminProtected>

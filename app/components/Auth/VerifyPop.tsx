@@ -11,6 +11,7 @@ interface VerifyPopProps {
     otp:string;
     setMailVerified:any;
 }
+const inputRefs = Array.from({ length: 4 }, () => useRef<HTMLInputElement>(null));
 
 const VerifyPop: FC<VerifyPopProps> = ({ email,otp,setMailVerified, onVerifySuccess }) => {
     const { theme } = useTheme();
@@ -24,7 +25,6 @@ const VerifyPop: FC<VerifyPopProps> = ({ email,otp,setMailVerified, onVerifySucc
     const [countdown, setCountdown] = useState(30);
     const [invalidError, setInvalidError] = useState(false);
 
-    const inputRefs = Array.from({ length: 4 }, () => useRef<HTMLInputElement>(null));
 
     useEffect(() => {
         let timer: NodeJS.Timeout;
@@ -41,9 +41,15 @@ const VerifyPop: FC<VerifyPopProps> = ({ email,otp,setMailVerified, onVerifySucc
         setVerifyCode({ ...verifyCode, [index]: value });
 
         if (value === '' && index > 0) {
-            inputRefs[index - 1].current?.focus();
+            const nextInput = inputRefs[index - 1];
+            if (nextInput && nextInput.current) {
+                nextInput.current.focus();
+            }
         } else if (value.length === 1 && index < 3) {
-            inputRefs[index + 1].current?.focus();
+            const nextInput = inputRefs[index + 1];
+            if (nextInput && nextInput.current) {
+                nextInput.current.focus();
+            }
         }
     };
 
@@ -87,7 +93,7 @@ const VerifyPop: FC<VerifyPopProps> = ({ email,otp,setMailVerified, onVerifySucc
             <h2 className="text-2xl font-bold text-center mb-4">Enter Verification Code</h2>
             <p className="text-center mb-6">We sent a code to your email: <span className="font-semibold">{email}</span></p>
             <div className="flex justify-center space-x-4 mb-4">
-                {Object.keys(verifyCode).map((key, index) => (
+                {Object.keys(verifyCode).map((_key, index) => (
                     <input
                         key={index}
                         ref={inputRefs[index]}
@@ -109,7 +115,7 @@ const VerifyPop: FC<VerifyPopProps> = ({ email,otp,setMailVerified, onVerifySucc
             </button>
 
             <p className={`mt-4 text-center ${containerClass}`}>
-                Didn't receive a code?{' '}
+                Didn&apos;t receive a code?{' '}
                 {resendAvailable ? (
                     <span
                         className="text-blue-500 cursor-pointer"

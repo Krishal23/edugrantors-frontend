@@ -46,11 +46,11 @@ const Header: FC<Props> = ({ open, setOpen, activeItem, route, setRoute }) => {
   const [openSidebar, setOpenSidebar] = useState(false);
   const { user } = useSelector((state: any) => state.auth);
   const { data } = useSession();
-  const [socialAuth, { isSuccess, error }] = useSocialAuthMutation();
-  const [logout, setLogout] = useState(false);
+  const [socialAuth, { isSuccess }] = useSocialAuthMutation();
+  const [, setLogout] = useState(false);
   const [submissionDataStore, setSubmissionDataStore] = useState({});
   const [isResend, setIsResend] = useState(false);
-  const [itemActive, setItemActive] = useState(activeItem);
+  const [, setItemActive] = useState(activeItem);
   const { theme } = useTheme();
 
   useEffect(() => {
@@ -71,7 +71,7 @@ const Header: FC<Props> = ({ open, setOpen, activeItem, route, setRoute }) => {
     if (data === null) {
       setLogout(true);
     }
-  }, [data, user]);
+  }, [data, user, isSuccess, socialAuth]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -81,14 +81,14 @@ const Header: FC<Props> = ({ open, setOpen, activeItem, route, setRoute }) => {
       window.addEventListener("scroll", handleScroll);
       return () => window.removeEventListener("scroll", handleScroll);
     }
+    return undefined; 
   }, []);
 
-  const handleClose = (e: { target: { id: string } }) => {
-    if (e.target.id === "screen") {
+  const handleClose = (e: React.MouseEvent<HTMLDivElement>) => {
+    if ((e.target as HTMLDivElement).id === "screen") {
       setOpenSidebar(false);
     }
   };
-  // Helper function to set profile as activeItem
   const profileHighlight = () => {
     setItemActive(10);
   };
@@ -96,11 +96,10 @@ const Header: FC<Props> = ({ open, setOpen, activeItem, route, setRoute }) => {
   return (
     <div className="w-full relative">
       <div
-        className={`${
-          active
+        className={`${active
             ? "dark:bg-opacity-50 dark:bg-gradient-to-b dark:from-gray-900 dark:to-black fixed bg-white top-0 left-0 w-full h-[80px] z-[80] border-b dark:border-[#ffffff1c] shadow-xl transition duration-500 "
             : "w-full border-b dark:border-[rgba(255,255,255,0.11)] h-[80px] z-[80] dark:shadow "
-        }`}
+          }`}
       >
         <div className="w-[95%] 800px:w-[92%] m-auto py-2 h-full">
           <div className="w-full h-[80px] flex items-center justify-between p-3">
@@ -118,7 +117,7 @@ const Header: FC<Props> = ({ open, setOpen, activeItem, route, setRoute }) => {
               />
             </Link>
             <div className="flex items-center">
-              <NavItems activeItem={setItemActive} isMobile={false} />
+              <NavItems activeItem={activeItem} isMobile={false} />
               <div className="800px:hidden m-2">
                 <HiOutlineMenuAlt3
                   size={25}

@@ -10,7 +10,7 @@ const QuizReview = dynamic(() => import("@/app/components/Quiz/QuizReview"), {
 });
 
 
-type Props = {}
+
 
 const Page = ({params}: any) => {
     const { cid, qid } = params;

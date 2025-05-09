@@ -1,26 +1,13 @@
 'use client'
-import React, { FC, useState } from 'react'
+import React, {  useState } from 'react'
 import { FaPlayCircle, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
-type Video = {
-    _id: string;
-    videoUrl: string;
-    title: string;
-    videoSection: string;
-    description: string;
-    links: { title: string; url: string }[];
-};
 
-type Props = {
-    data?: Video[];
-    activeVideo: number;
-    setActiveVideo: (activeVideo: number) => void;
-};
 
-const CourseContentList: FC<Props> = ({ data = [], activeVideo, setActiveVideo }) => {
+const CourseContentList= ({ data = [], activeVideo, setActiveVideo }:any) => {
     const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({});
 
-    const sections = data.reduce((acc: Record<string, Video[]>, video) => {
+    const sections = data.reduce((acc: any, video:any) => {
         acc[video.videoSection] = acc[video.videoSection] || [];
         acc[video.videoSection].push(video);
         return acc;
@@ -50,17 +37,17 @@ const CourseContentList: FC<Props> = ({ data = [], activeVideo, setActiveVideo }
                     </div>
                     {expandedSections[section] && (
                         <div className="space-y-3">
-                            {sections[section].map((video) => (
+                            {sections[section].map((video:any) => (
                                 <button
                                     key={video._id}
-                                    onClick={() => setActiveVideo(data.findIndex((v) => v._id === video._id))}
-                                    className={`flex items-center h-9 p-3 rounded-lg transition-all duration-200 ease-in-out ${activeVideo === data.findIndex((v) => v._id === video._id)
+                                    onClick={() => setActiveVideo(data.findIndex((v:any) => v._id === video._id))}
+                                    className={`flex items-center h-9 p-3 rounded-lg transition-all duration-200 ease-in-out ${activeVideo === data.findIndex((v:any) => v._id === video._id)
                                             ? "bg-blue-700 text-white shadow-md"
                                             : "bg-gray-800 text-gray-300 hover:bg-blue-800"
                                         } overflow-hidden`}
                                 >
                                     <FaPlayCircle
-                                        className={`mr-3 h-5 text-2xl ${activeVideo === data.findIndex((v) => v._id === video._id)
+                                        className={`mr-3 h-5 text-2xl ${activeVideo === data.findIndex((v:any) => v._id === video._id)
                                                 ? "text-yellow-400"
                                                 : "text-blue-400"
                                             }`}
@@ -68,7 +55,7 @@ const CourseContentList: FC<Props> = ({ data = [], activeVideo, setActiveVideo }
                                     <span className="max-w-[180px] whitespace-nowrap overflow-hidden text-ellipsis  block flex-1 text-left font-medium text-lg">
                                         {video.title}
                                     </span>
-                                    {activeVideo === data.findIndex((v) => v._id === video._id) && (
+                                    {activeVideo === data.findIndex((v:any) => v._id === video._id) && (
                                         <span className="px-3 py-1 h-5 m-2 bg-yellow-500 text-yellow-100 rounded-full text-[10px]">Now Playing</span>
                                     )}
                                 </button>
