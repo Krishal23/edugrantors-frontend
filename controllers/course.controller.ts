@@ -915,6 +915,7 @@ export const reviewQuizAttempt = CatchAsyncErrror(
           answer,
         ])
       );
+      // console.log(quiz.questions);
 
       // Prepare the response with all questions
       const reviewedAnswers = quiz.questions.map((question: any) => {
@@ -948,6 +949,7 @@ export const reviewQuizAttempt = CatchAsyncErrror(
           marks: isCorrect ? question.marks : 0,
           negativeMarks: isCorrect ? 0 : question.negativeMarks,
           image: question.image,
+          imageExplain: question.imageExplain
         };
       });
 
