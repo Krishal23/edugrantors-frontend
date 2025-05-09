@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useState } from 'react';
-import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import { Box, Modal, Typography } from '@mui/material';
 import { AiOutlineEdit } from 'react-icons/ai';
 import { useTheme } from 'next-themes';
@@ -10,14 +10,6 @@ import { format } from 'timeago.js';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
 
-interface CourseRow {
-    id: string;
-    title: string;
-    purchased: string;
-    ratings: string;
-    created_at: string;
-    updated_at: string;
-}
 
 const AllCourses = () => {
     const { theme } = useTheme();
@@ -30,12 +22,12 @@ const AllCourses = () => {
 
 
 
-    const rows: CourseRow[] = [];
+    const rows: any[] = [];
 
     if (data && data.courses) {
-        data.courses.forEach((item:CourseRow) => {
+        data.courses.forEach((item:any) => {
             rows.push({
-                id: item.id,
+                id: item._id,
                 title: item.title || "",
                 purchased: item.purchased || "N/A",
                 ratings: item.ratings || "null",
@@ -52,7 +44,7 @@ const AllCourses = () => {
             headerName: "Course Title",
             minWidth: 200,
             flex: 1,
-            renderCell: (params: GridRenderCellParams<CourseRow>) => (
+            renderCell: (params:any) => (
                 <Link href={`/admin/course/${params.row.id}`} passHref>
                     {params.row.title}
 
@@ -68,7 +60,7 @@ const AllCourses = () => {
             headerName: "Edit",
             minWidth: 100,
             flex: 0.2,
-            renderCell: (params: GridRenderCellParams<CourseRow>) => (
+            renderCell: (params: any) => (
                 <Link href={`/admin/edit-course/${params.row.id}`} className='flex justify-center items-center h-full'>
                     <AiOutlineEdit
                         className={theme === "dark" ? "text-white" : "text-black"}

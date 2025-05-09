@@ -17,26 +17,6 @@ type Props = {
     isTeam?: boolean;
 };
 
-// interface User {
-//     _id: string;
-//     name: string;
-//     email: string;
-//     contactnumber: string;
-//     role: string;
-//     courses: any[];
-//     createdAt: string;
-// }
-
-type UserRow = {
-    id: string;
-    name: string;
-    email: string;
-    contact: string;
-    role: string;
-    courses: number;
-    created_at: string;
-};
-
 const AllUsers: FC<Props> = ({ isTeam }) => {
     const { theme } = useTheme();
     const [, setRole] = useState("admin");
@@ -52,14 +32,14 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
         }
     }, [isSuccess]);
 
-    const columns: GridColDef<UserRow>[] = [
+    const columns = [
         { field: "id", headerName: "ID", minWidth: 70, flex: 0.3 },
         {
             field: "name",
             headerName: "Name",
             minWidth: 200,
             flex: 1,
-            renderCell: (params: GridRenderCellParams<UserRow>) => (
+            renderCell: (params: any) => (
                 <div className="flex items-center justify-between w-full">
                     <span>{params.row.name}</span>
                     <Link href={`/admin/user/${params.row.id}`} passHref>
@@ -75,7 +55,7 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
             headerName: "Role",
             minWidth: 120,
             flex: 0.4,
-            renderCell: (params: GridRenderCellParams<UserRow>) => (
+            renderCell: (params:any) => (
                 <div className="flex items-center justify-between w-full">
                     <span>{params.row.role}</span>
                     {params.row.role !== "admin" && (
@@ -95,7 +75,7 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
             headerName: "",
             minWidth: 100,
             flex: 0.2,
-            renderCell: (params: GridRenderCellParams<UserRow>) => (
+            renderCell: (params:any) => (
                 <a href={`mailto:${params.row.email}`}>
                     <AiOutlineMail size={20} color="gray" />
                 </a>
@@ -103,32 +83,33 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
         }
     ];
 
-    const rows: UserRow[] = [];
+    const rows: any[] = [];
+    console.log("Data", data);
 
     if (isTeam) {
         const newData = data?.users.filter((user: any) =>
             user.role === 'admin' || user.role === 'teacher'
         );
-        newData?.forEach((user: UserRow) => {
+        newData?.forEach((user: any) => {
             rows.push({
-                id: user.id,
+                id: user._id,
                 name: user.name || "",
                 email: user.email || "N/A",
-                contact: user.contact || "N/A",
+                contact: user.contactnumber || "N/A",
                 role: user.role || "null",
-                courses: user.courses || 0,
+                courses: user.courses.length || 0,
                 created_at: format(user.created_at)
             });
         });
     } else if (data && data.users) {
-        data.users.forEach((user: UserRow) => {
+        data.users.forEach((user: any) => {
             rows.push({
-                id: user.id,
+                id: user._id,
                 name: user.name || "",
                 email: user.email || "N/A",
-                contact: user.contact || "N/A",
+                contact: user.contactnumber || "N/A",
                 role: user.role || "null",
-                courses: user.courses || 0,
+                courses: user.courses.length || 0,
                 created_at: format(user.created_at)
             });
         });
