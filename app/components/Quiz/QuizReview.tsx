@@ -24,6 +24,7 @@ const QuizReview = ({ quizId, courseId }: Props) => {
 
   if (!data ) return <div>No review data found</div>;
 
+  // console.log("Quiz Review Data", data);
   const {
     title,
     description,

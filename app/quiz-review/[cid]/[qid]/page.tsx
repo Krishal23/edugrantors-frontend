@@ -18,6 +18,7 @@ const Page = ({params}: any) => {
     const [open, setOpen] = useState(false);
     return (
       <>
+      
       <Header
         open={open}
         setOpen={setOpen}

@@ -80,7 +80,7 @@ const QuizDetailsAdmin = ({
     }
 
 
-    console.log(selectedQuestions,"gvjhbkj")
+    // console.log(data,"gvjhbkj")
 
     const containerClass = theme === 'dark' ? 'text-white' : 'text-gray-900';
 
@@ -185,6 +185,7 @@ const QuizDetailsAdmin = ({
                         )
                     }
                 </div>
+                
                 {data?.quiz?.questions.length === 0 ? (
                     <p>No questions added yet.</p>
                 ) : (
@@ -205,6 +206,7 @@ const QuizDetailsAdmin = ({
                             image={question.image}
                             isEdit={isEdit}
                             handleRemove={handleRemove}
+                            imageExplain={question?.imageExplain}
                         />
                     ))
                 )}

@@ -1,4 +1,4 @@
-import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import { FaCheckCircle, FaDownload, FaTimesCircle } from "react-icons/fa";
 import { MdOutlineDoNotDisturb } from "react-icons/md";
 
 type Option = {
@@ -16,6 +16,7 @@ type Answer = {
   marks: number;
   negativeMarks: number;
   image: any;
+  imageExplain: any;
   isAttempted: boolean;
 };
 
@@ -25,6 +26,7 @@ type CardProps = {
 };
 
 const ReviewCard = ({ question: answer, index }: CardProps) => {
+  console.log(answer);
   if (!answer?.isAttempted) {
     return (
       <div className="p-6 bg-gradient-to-r from-gray-800 to-gray-900 rounded-xl shadow-lg mb-6 hover:shadow-2xl transition-all duration-300">
@@ -73,7 +75,20 @@ const ReviewCard = ({ question: answer, index }: CardProps) => {
             <p className="italic text-gray-400">
               Explanation: {answer.explanation}
             </p>
+            
           )}
+           {answer?.imageExplain?.url && (
+          <div className="mb-3 sm:mb-4">
+            <img
+              src={answer.imageExplain.url || "/placeholder.svg"}
+              alt="Question"
+              width={500}
+              height={300}
+              className="max-w-full h-auto rounded"
+            />
+          </div>
+        )}
+          
         </div>
 
         {/* Marks */}
@@ -100,15 +115,20 @@ const ReviewCard = ({ question: answer, index }: CardProps) => {
 
       {/* Image */}
       {answer?.image?.url && (
+        <>
         <div className="max-w-[80vw] md:h-80 xxs:h-60 overflow-x-scroll">
+
           <img
             src={answer?.image?.url}
             alt="img loading..."
-            width={900}
+            width={600}
             height={900}
             className=" object-scale-down rounded-lg m-4"
           />
         </div>
+      <a href={answer.image.url}><FaDownload size={20}/></a>
+        </>
+
       )}
 
       {/* Options */}
@@ -170,6 +190,19 @@ const ReviewCard = ({ question: answer, index }: CardProps) => {
         <p className="italic text-gray-400">
           Explanation: {answer.explanation}
         </p>
+        
+           {answer?.imageExplain?.url && (
+          <div className="mb-3 sm:mb-4 flex flex-col items-start">
+            <a href={answer.imageExplain.url}><FaDownload size={20}/></a>
+            <img
+              src={answer.imageExplain.url || "/placeholder.svg"}
+              alt="Question"
+              width={500}
+              height={300}
+              className="max-w-full h-auto rounded mt-4"
+            />
+          </div>
+        )}
 
         {/* Marks */}
         <p

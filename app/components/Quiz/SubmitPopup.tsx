@@ -7,6 +7,7 @@ type SubmitPopupProps = {
 };
 
 const SubmitPopup = ({ answers, onClose, onConfirm }: SubmitPopupProps) => {
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white w-4/5 max-w-md   rounded-lg shadow-lg p-6 space-y-4">
