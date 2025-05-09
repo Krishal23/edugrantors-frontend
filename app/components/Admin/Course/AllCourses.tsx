@@ -24,11 +24,12 @@ const AllCourses = () => {
 
     const rows: any[] = [];
 
+    console.log(data, "data")
     if (data && data.courses) {
         data.courses.forEach((item:any) => {
             rows.push({
                 id: item._id,
-                title: item.title || "",
+                title: item.name || "",
                 purchased: item.purchased || "N/A",
                 ratings: item.ratings || "null",
                 created_at: format(item.created_at),

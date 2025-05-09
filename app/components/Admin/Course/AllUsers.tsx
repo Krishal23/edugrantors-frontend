@@ -84,7 +84,6 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
     ];
 
     const rows: any[] = [];
-    console.log("Data", data);
 
     if (isTeam) {
         const newData = data?.users.filter((user: any) =>
