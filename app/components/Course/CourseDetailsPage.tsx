@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 import Loader from '../Loader/Loader';
 import Heading from '@/app/utils/Heading';
 import Header from '../Header';
+import { useSelector } from 'react-redux';
 
 const CourseDetails = dynamic(() => import('./CourseDetails'), {
   loading: () => <Loader message='Loading Course Details...'/>, 
@@ -18,6 +19,8 @@ const CourseDetailsPage = ({ id }: Props) => {
     
     const [route, setRoute] = useState("Login");
     const [open, setOpen] = useState(false);
+    const { user } = useSelector((state: any) => state.auth);
+    console.log(user,"htdrjghvjb")
     const { data, isLoading, isError } = useGetCourseDetailsQuery(id); 
 
     if (isError) {
@@ -46,7 +49,7 @@ const CourseDetailsPage = ({ id }: Props) => {
                                 route={route}
                             />
 
-                            <CourseDetails id={id} setOpen={setOpen} />
+                            <CourseDetails id={id} setOpen={setOpen} user={user} />
 
                         </>
                     ) : (

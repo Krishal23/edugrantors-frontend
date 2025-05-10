@@ -41,6 +41,15 @@ const Profile: FC<Props> = () => {
         }
     };
 
+    const clearAllCookies = () => {
+        // Clear all cookies
+        document.cookie.split(';').forEach((c) => {
+            document.cookie = c
+                .replace(/^ +/, '')
+                .replace(/=.*/, '=;expires=' + new Date(0).toUTCString() + ';path=/');
+        });
+    };
+
     useEffect(() => {
         if (user) {
             console.log("User data:", user);
@@ -56,7 +65,11 @@ const Profile: FC<Props> = () => {
             setLogout(true);
             await signOut({ redirect: false });  
             clearCache();  
+            clearAllCookies();
+            sessionStorage.clear();
+            localStorage.clear();
             dispatch(userLoggedOut()); 
+            window.location.reload(); // Hard reload
         } catch (error) {
             console.error("Error during logout:", error);
         }

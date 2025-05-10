@@ -28,9 +28,10 @@ const CourseContentList = dynamic(
 type Props = {
   id: string;
   setOpen: (open: boolean) => void;
+  user:any
 };
 
-const CourseDetails: FC<Props> = ({ setOpen: setLogin, id }) => {
+const CourseDetails: FC<Props> = ({ setOpen: setLogin, id ,user}) => {
   const { theme } = useTheme();
   const [couponPop, setCouponPop] = useState(false);
   const [selectedCoupon, setSelectedCoupon] = useState<string>("");
@@ -45,12 +46,19 @@ const CourseDetails: FC<Props> = ({ setOpen: setLogin, id }) => {
     isLoading: courseLoading,
     isError: courseError
   } = useGetCourseDetailsQuery(id);
+
   
   const { 
     data: userData, 
     refetch: refetchUser, 
     isLoading: userLoading
   } = useLoadUserQuery({});
+  console.log("userDatadsasa", userData);
+  useEffect(() => {
+    if(!userData) {
+      refetchUser()
+    }
+  }, [userData]);
 
   // Payment mutations
   const [createOrder, { isLoading: isOrderCreating }] = useCreateOrderMutation();
@@ -78,7 +86,11 @@ const CourseDetails: FC<Props> = ({ setOpen: setLogin, id }) => {
     courseData: curriculum = [],
   } = course;
 
-  const user = userData?.user;
+  if(userData?.user) {
+    user = userData?.user;
+  }
+
+  console.log(user)
   
   // Set initial discounted price when course data loads
   useEffect(() => {
