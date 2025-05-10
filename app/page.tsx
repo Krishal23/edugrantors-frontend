@@ -3,11 +3,11 @@ import React, { useState } from "react";
 import dynamic from "next/dynamic";
 import Heading from "./utils/Heading";
 import Header from "./components/Header";
-import Loader from "./components/Loader/Loader";  // Import your Loader component
+import Loader from "./components/Loader/Loader";  
 
-// Dynamically import the components with a loader
+
 const Hero = dynamic(() => import("./components/Routes/Hero"), {
-  loading: () => <Loader />, // Use the Loader component
+  loading: () => <Loader />,
 });
 const Courses = dynamic(() => import("./components/Routes/Courses"), {
   loading: () => <Loader message="Loading Courses..."/>,
