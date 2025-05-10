@@ -1,3 +1,11 @@
+<<<<<<< HEAD
+# Node.js
+node_modules/
+
+# Logs
+logs
+*.log
+=======
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
@@ -21,10 +29,44 @@
 *.pem
 
 # debug
+>>>>>>> 9de6e5e4bcc1e3a2735476b3f45a6ed3b70ba5b5
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+<<<<<<< HEAD
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.development
+.env.*.local
+
+# Build output
+/dist
+/build
+
+# Dependency directories
+/.pnp
+.pnp.js
+
+# TypeScript
+*.tsbuildinfo
+
+# IDE and editor folders
+.idea/
+.vscode/
+
+# Testing coverage
+coverage/
+
+# Miscellaneous
+*.tgz
+=======
 # local env files
 .env*.local
 .env
@@ -37,3 +79,4 @@ next-env.d.ts
 
 .next
 node_modules
+>>>>>>> 9de6e5e4bcc1e3a2735476b3f45a6ed3b70ba5b5
