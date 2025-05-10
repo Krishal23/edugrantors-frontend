@@ -46,7 +46,7 @@ const ReviewCard = ({ question: answer, index }: CardProps) => {
             alt="img loading..."
             height={300}
             width={500}
-            className="max-w-[80vw] md:h-80 xxs:h-60 object-cover rounded-lg m-4"
+            className="max-w-[80vw] h md:h-80 xxs:h-60 object-cover rounded-lg m-4"
           />
         )} */}
 
