@@ -5,6 +5,9 @@ import * as XLSX from "xlsx";
 
 const AttemptsPopup = ({ courseId, quizId, onClose }: any) => {
   const { data, isLoading, isError } = useGetUsersMarksAdminQuery({ courseId, quizId });
+  // console.log(courseId, quizId);
+
+  // console.log(data)
 
   // Function to Download Data as Excel
   const downloadExcel = () => {
@@ -13,7 +16,10 @@ const AttemptsPopup = ({ courseId, quizId, onClose }: any) => {
     const worksheet = XLSX.utils.json_to_sheet(
       data.results.map((attempt: any, index: number) => ({
         "S.No": index + 1,
+        "User ID": attempt.userId,
         Name: attempt.name,
+        "Total Questions Attempted": attempt.totalQuestionsAttempted,
+        "total Correct Answers": attempt.totalCorrectQuestions,
         "Marks Scored": attempt.marksScored,
       }))
     );
@@ -45,6 +51,17 @@ const AttemptsPopup = ({ courseId, quizId, onClose }: any) => {
                   className="flex justify-between p-3 border border-gray-700 rounded-lg bg-gray-900"
                 >
                   <span className="font-medium">{attempt.name}</span>
+                  {/* <span className="text-gray-400">{attempt.userId}</span> */}
+                  {/* <span className="text-gray-400">
+                    {attempt.totalQuestionsAttempted} / {attempt.totalQuestions}
+                  </span> */}
+                  <span className="text-green-400">
+                    Correct: {attempt.totalCorrectQuestions}
+                  </span>
+
+                  <span className="text-gay-400">
+                    Attempted: {attempt.totalQuestionsAttempted} 
+                  </span>
                   <span className="font-bold text-indigo-400">{attempt.marksScored} Marks</span>
                 </li>
               ))}

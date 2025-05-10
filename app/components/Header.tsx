@@ -93,6 +93,8 @@ const Header: FC<Props> = ({ open, setOpen, activeItem, route, setRoute }) => {
     setItemActive(10);
   };
 
+  // console.log(user,"user");
+
   return (
     <div className="w-full relative">
       <div

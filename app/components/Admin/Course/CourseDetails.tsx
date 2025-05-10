@@ -46,6 +46,7 @@ type Props = {
 
 const CourseDetails = ({ courseData, refetch, teacher }: Props) => {
   const { theme } = useTheme();
+  // console.log(courseData);
 
   const containerClass =
     theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-gray-900";
@@ -131,7 +132,7 @@ const CourseDetails = ({ courseData, refetch, teacher }: Props) => {
   };
 
 
-  console.log(courseData?.quizzes)
+  // console.log(courseData?.quizzes)
   return (
     <div
       className={` flex-col-reverse  text-zinc-800 dark:text-white justify-center w-[900px] ml-[2rem] p-8 my-24 rounded-lg shadow-lg ${containerClass}`}
@@ -267,7 +268,7 @@ const CourseDetails = ({ courseData, refetch, teacher }: Props) => {
             Purchased <FaEye />
           </Link>
           <p className={subTextClass}>
-            {courseData?.purchased} Students Enrolled{" "}
+            {courseData?.studentsEnrolled?.length} Students Enrolled{" "}
           </p>
         </div>
       </div>

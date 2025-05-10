@@ -26,7 +26,6 @@ type Props = { };
 const Page: React.FC<Props> = ({ params}: any) => {
   const { data, isLoading, isError,refetch } = useGetCourseDetailsAdminQuery(params.id); // Pass id to the query
   
-  console.log(data)
   // Handle error case
   if (isError) {
       return <div>Error loading course details. Please try again.</div>;
