@@ -26,11 +26,17 @@ const QuizReview = ({ quizId, courseId, userId }: Props) => {
   const router = useRouter();
 
   if (isLoading) return <Loader message='Loading' />;
-  if ('data' in error! && error.data && typeof error.data === 'object' && 'message' in error.data) {
+  if (
+    error &&
+    typeof error === "object" &&
+    "data" in error &&
+    error.data &&
+    typeof error.data === "object" &&
+    "message" in error.data
+  ) {
     router.push("/unauthorized");
     return <Loader message={(error.data as { message: string }).message} />;
   }
-
 
   if (error) return <Loader message="Something went wrong." />;
 
