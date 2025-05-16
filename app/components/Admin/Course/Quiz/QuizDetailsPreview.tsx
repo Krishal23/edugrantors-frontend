@@ -21,7 +21,7 @@ type QuizDetailsProps = {
         totalQuestion: number;
         maxMarks: number;
         attemptedBy: Array<{
-            userId: string;
+            _id: string;
             name: string;
         }>;
     };
@@ -158,7 +158,7 @@ const QuizDetailsPreview: React.FC<QuizDetailsProps> = ({ quizDetails, isEdit,co
                         <div>
                             <p className="text-sm flex items-center gap-2">
                                 <FaIdBadge className="text-blue-400" /> 
-                                <strong>ID:</strong> {attempt.userId}
+                                <strong>ID:</strong> {attempt._id}
                             </p>
                             <p className="text-sm flex items-center gap-2">
                                 <FaUser className="text-green-400" /> 
@@ -168,7 +168,7 @@ const QuizDetailsPreview: React.FC<QuizDetailsProps> = ({ quizDetails, isEdit,co
                         <button
                             onClick={() =>
                                 router.push(
-                                    `/quiz-review/${quizDetails.courseId}/${quizDetails.quizId}?userId=${attempt.userId}`
+                                    `/quiz-review/${quizDetails.courseId}/${quizDetails.quizId}?userId=${attempt._id}`
                                 )
                             }
                             className="flex items-center text-yellow-400 hover:text-yellow-300 gap-1 transition-all"

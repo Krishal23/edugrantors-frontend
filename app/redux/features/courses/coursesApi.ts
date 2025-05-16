@@ -146,10 +146,11 @@ export const courseAPi = apiSlice.injectEndpoints({
             })
         }),
         getTestReview: builder.query({
-            query: ({courseId,quizId}) => ({
-                url: `review-test/${courseId}/${quizId}`,
+            query: ({courseId,quizId,userId}) => ({
+                url: `review-test/${courseId}/${quizId}?userId=${userId}`,
                 method: "GET",
                 credentials: "include" as const,
+                
             })
 
         }),

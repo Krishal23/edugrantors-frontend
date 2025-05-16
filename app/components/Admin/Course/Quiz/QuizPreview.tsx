@@ -24,7 +24,7 @@ interface QuizPreviewProps {
     quizId: string;
     totalQuestion: number;
     maxMarks: number;
-    attemptedBy: { userId: string; name: string; }[];
+    attemptedBy: { _id: string; name: string; }[];
   };
   questions: {
     question: string;
