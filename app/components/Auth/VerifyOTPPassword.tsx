@@ -33,6 +33,7 @@ const ChangePassword: FC<Props> = ({ setRoute }: Props) => {
     const handleSubmit = async () => {
         try {
             const user = await userExist(email).unwrap()
+            console.log(user);
             if (user) {
                 const userName = user.user.name
                 setUserId(user.user._id)

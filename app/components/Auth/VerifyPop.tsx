@@ -11,9 +11,9 @@ interface VerifyPopProps {
     otp:string;
     setMailVerified:any;
 }
-const inputRefs = Array.from({ length: 4 }, () => useRef<HTMLInputElement>(null));
 
 const VerifyPop: FC<VerifyPopProps> = ({ email,otp,setMailVerified, onVerifySuccess }) => {
+    const inputRefs = Array.from({ length: 4 }, () => useRef<HTMLInputElement>(null));
     const { theme } = useTheme();
     const [verifyCode, setVerifyCode] = useState<{ [key: number]: string }>({
         0: '',

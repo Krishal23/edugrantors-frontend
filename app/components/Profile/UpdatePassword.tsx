@@ -16,7 +16,7 @@ const schema = Yup.object().shape({
         .required('Please confirm your new password'),
 });
 
-const UpdatePassword = ({}) => {
+const UpdatePassword = ({ }) => {
     const [showOld, setShowOld] = useState(false);
     const [showNew, setShowNew] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
@@ -35,15 +35,19 @@ const UpdatePassword = ({}) => {
         },
     });
 
+
     useEffect(() => {
         if (isSuccess) {
             toast.success('Password updated successfully');
-            formik.resetForm();
         }
-        if (error) {
-            toast.error('Failed to update password');
+        if (error && 'data' in error) {
+            const err = error as { data: { message?: string } };
+            if (err.data?.message) {
+                toast.error(err.data.message);
+            }
         }
-    }, [isSuccess, error, formik]);
+    }, [isSuccess, error]);
+
 
     return (
         <div className="flex flex-col items-center justify-center w-full p-6 bg-gray-100 dark:bg-gray-900 rounded-lg shadow-md">
@@ -120,36 +124,36 @@ const PasswordField: FC<{
     setShowPassword,
     error,
 }) => (
-    <div className="w-full">
-        <label
-            htmlFor={name}
-            className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
-        >
-            {label}
-        </label>
-        <div className="relative">
-            <input
-                type={showPassword ? 'text' : 'password'}
-                id={name}
-                name={name}
-                value={value}
-                onChange={onChange}
-                onBlur={onBlur}
-                className="w-full px-3 py-2 text-gray-900 bg-white border border-gray-300 rounded-md shadow-sm dark:bg-gray-800 dark:text-gray-200 focus:outline-none"
-            />
-            <div
-                className="absolute inset-y-0 right-3 flex items-center cursor-pointer"
-                onClick={() => setShowPassword(!showPassword)}
+        <div className="w-full">
+            <label
+                htmlFor={name}
+                className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
             >
-                {showPassword ? (
-                    <AiOutlineEyeInvisible className="text-gray-500 dark:text-gray-400" />
-                ) : (
-                    <AiOutlineEye className="text-gray-500 dark:text-gray-400" />
-                )}
+                {label}
+            </label>
+            <div className="relative">
+                <input
+                    type={showPassword ? 'text' : 'password'}
+                    id={name}
+                    name={name}
+                    value={value}
+                    onChange={onChange}
+                    onBlur={onBlur}
+                    className="w-full px-3 py-2 text-gray-900 bg-white border border-gray-300 rounded-md shadow-sm dark:bg-gray-800 dark:text-gray-200 focus:outline-none"
+                />
+                <div
+                    className="absolute inset-y-0 right-3 flex items-center cursor-pointer"
+                    onClick={() => setShowPassword(!showPassword)}
+                >
+                    {showPassword ? (
+                        <AiOutlineEyeInvisible className="text-gray-500 dark:text-gray-400" />
+                    ) : (
+                        <AiOutlineEye className="text-gray-500 dark:text-gray-400" />
+                    )}
+                </div>
             </div>
+            {error && <p className="mt-2 text-xs text-red-500">{error}</p>}
         </div>
-        {error && <p className="mt-2 text-xs text-red-500">{error}</p>}
-    </div>
-);
+    );
 
 export default UpdatePassword;
