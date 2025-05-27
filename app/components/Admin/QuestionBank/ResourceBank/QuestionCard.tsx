@@ -18,6 +18,7 @@ const QuestionCard = ({
   questionsPerPage,
   onPageChange,
 }:any) => {
+  
   // This tracks the index within the current page's questions array
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number | null>(null)
   const [selectedOption, setSelectedOption] = useState<number | null>(null)

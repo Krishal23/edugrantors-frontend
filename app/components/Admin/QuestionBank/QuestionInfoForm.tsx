@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {  FaSpinner } from "react-icons/fa";
+import { FaSpinner } from "react-icons/fa";
 import dynamic from "next/dynamic";
 import Loader from "@/app/components/Loader/Loader";
 import toast from "react-hot-toast";
@@ -37,17 +37,17 @@ export interface QuestionType {
   imageExplain?: any;
 }
 
-type Props = {
+interface Props {
   courseId: string;
   topic: string;
   subTopic: string;
   onClose: () => void;
-  type?: any;
+  type?: "single" | "multiple" | "numerical" | "phrase";
   question?: any;
   isEdit?: boolean;
   queId?: string;
   refetch: () => void;
-};
+}
 
 const QuestionInfoForm: React.FC<Props> = ({
   refetch,
@@ -57,28 +57,79 @@ const QuestionInfoForm: React.FC<Props> = ({
   onClose,
   type,
   question,
-  isEdit,
+  isEdit = false,
 }) => {
+  console.log(courseId);
   const [dragging, setDragging] = useState(false);
   const [draggingExplain, setDraggingExplain] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
 
-  const [questionData, setQuestionData] = useState<QuestionType>({
-    type: type || "single", // Default to 'single' if no type is provided
-    question: question?.question || "",
-    options: question?.options || [
-      { text: "", isCorrect: false },
-      { text: "", isCorrect: false },
-      { text: "", isCorrect: false },
-      { text: "", isCorrect: false },
-    ],
-    correctAnswer: question?.correctAnswer || "",
-    marks: question?.marks || 0,
-    negativeMarks: question?.negativeMarks || 0,
-    explanation: question?.explanation || "",
-    image: question?.image || "",
-    imageExplain: question?.imageExplain || "",
+  const mapQuestionTypeToBackend = (frontendType: string) => {
+    const typeMap: { [key: string]: string } = {
+      single: "single",
+      multiple: "multiple",
+      numerical: "numerical",
+      phrase: "phrase",
+    };
+    return typeMap[frontendType] || frontendType;
+  };
+
+  const mapQuestionTypeToFrontend = (backendType: string) => {
+    const typeMap: { [key: string]: string } = {
+      SCQ: "single",
+      MCQ: "multiple",
+      numerical: "numerical",
+      phrase: "phrase",
+    };
+    return typeMap[backendType] || backendType;
+  };
+
+  // Initialize question data with proper deep copying for edit mode
+  const [questionData, setQuestionData] = useState<QuestionType>(() => {
+    if (isEdit && question) {
+      // Create deep copies to avoid read-only issues
+      const mappedOptions = question.options ? 
+        question.options.map((opt: any) => ({
+          text: opt.text || "",
+          isCorrect: opt.isCorrect || false
+        })) : [
+          { text: "", isCorrect: false },
+          { text: "", isCorrect: false },
+          { text: "", isCorrect: false },
+          { text: "", isCorrect: false },
+        ];
+
+      return {
+        type: mapQuestionTypeToFrontend(question.type) as QuestionType["type"],
+        question: question.question || "",
+        options: mappedOptions,
+        correctAnswer: question.correctAnswer || "",
+        marks: question.marks || 0,
+        negativeMarks: question.negativeMarks || 0,
+        explanation: question.explanation || "",
+        image: question.image || "",
+        imageExplain: question.imageExplain || "",
+      };
+    }
+
+    return {
+      type: type || "single",
+      question: "",
+      options: [
+        { text: "", isCorrect: false },
+        { text: "", isCorrect: false },
+        { text: "", isCorrect: false },
+        { text: "", isCorrect: false },
+      ],
+      correctAnswer: "",
+      marks: 0,
+      negativeMarks: 0,
+      explanation: "",
+      image: "",
+      imageExplain: "",
+    };
   });
+
   const [
     uploadQuestion,
     { isSuccess: isUploadSuccess, isError: isUploadError, isLoading: isUploadLoading },
@@ -91,41 +142,46 @@ const QuestionInfoForm: React.FC<Props> = ({
     setIsUploading(isUploadLoading || isEditLoading);
   }, [isUploadLoading, isEditLoading]);
 
+  // Handle success and error states
   useEffect(() => {
     if (isEditSuccess) {
-      toast.success("Question Updated");
+      toast.success("Question Updated Successfully");
       setIsUploading(false);
+      // refetch();
+      onClose();
     }
     if (isUploadSuccess) {
-      toast.success("Question Uploaded");
+      toast.success("Question Uploaded Successfully");
       setIsUploading(false);
+      // refetch();
     }
     if (isEditError) {
-      toast.error("Failed to Update.");
+      toast.error("Failed to Update Question");
       setIsUploading(false);
     }
     if (isUploadError) {
-      toast.error("Failed to Upload.");
+      toast.error("Failed to Upload Question");
       setIsUploading(false);
     }
-  }, [isEditSuccess, isUploadSuccess, isEditError, isUploadError, refetch]);
+  }, [isEditSuccess, isUploadSuccess, isEditError, isUploadError, refetch, onClose]);
 
   const handleFieldChange = (field: string, value: any) => {
     setQuestionData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const validateForm = (questionData: any) => {
+  const validateForm = (questionData: QuestionType) => {
     const missingFields: string[] = [];
 
-    if (!questionData.question) {
+    if (!questionData.question.trim()) {
       missingFields.push("Question");
     }
-    if (!questionData.explanation) {
+    if (!questionData.explanation.trim()) {
       missingFields.push("Explanation");
     }
     if (
       !questionData.correctAnswer ||
-      questionData.correctAnswer.length === 0
+      (Array.isArray(questionData.correctAnswer) && questionData.correctAnswer.length === 0) ||
+      (typeof questionData.correctAnswer === 'string' && !questionData.correctAnswer.trim())
     ) {
       missingFields.push("Correct Answer");
     }
@@ -145,45 +201,75 @@ const QuestionInfoForm: React.FC<Props> = ({
   const handleSubmit = async () => {
     if (validateForm(questionData)) {
       setIsUploading(true);
+
+      // Validate required IDs before sending
+      if (isEdit && !question?._id) {
+        toast.error("Question ID is missing for edit operation");
+        setIsUploading(false);
+        return;
+      }
+
+      if (!courseId || courseId.trim() === "") {
+        toast.error("Course ID is required");
+        setIsUploading(false);
+        return;
+      }
+
       const data = {
-        questionId: question?._id,
+        ...(isEdit && { questionId: question._id }),
         ...questionData,
-        courseId,
-        topic,
-        subTopic,
+        type: mapQuestionTypeToBackend(questionData.type),
+        courseId: courseId.trim(),
+        topic: topic.trim(),
+        subTopic: subTopic.trim(),
       };
+
+      // Log data for debugging
+      console.log("Submitting data:", data);
+
       try {
         if (isEdit) {
-          await editQuestion(data);
-        } else {
-          console.log(data)
-          const response: any = await uploadQuestion(data);
-          console.log(response.data)
-          if (response?.success) {
-            toast.success("Question Uploaded");
+          const response: any = await editQuestion(data);
+          if (response?.data?.success) {
+            toast.success("Question updated successfully");
+            // refetch();
+            onClose();
+          } else if (response?.error) {
+            console.error("Edit error:", response.error);
+            toast.error(response.error.data?.message || "Failed to update question");
           }
-          // setQuestionData((prev) => ({ 
-          //   ...prev,
-          //   type: "single",
-          //   question: "",
-          //   options: [
-          //     { text: "", isCorrect: false },
-          //     { text: "", isCorrect: false },
-          //     { text: "", isCorrect: false },
-          //     { text: "", isCorrect: false },
-          //   ],
-          //   correctAnswer: "",
-          //   marks: 0,
-          //   negativeMarks: 0,
-          //   explanation: "",
-          //   image: "",
-          //   imageExplain: ""}));
+        } else {
+          const response: any = await uploadQuestion(data);
+          if (response?.data?.success) {
+            toast.success("Question uploaded successfully");
+            // refetch();
+            // Reset form for new question
+            setQuestionData({
+              type: "single",
+              question: "",
+              options: [
+                { text: "", isCorrect: false },
+                { text: "", isCorrect: false },
+                { text: "", isCorrect: false },
+                { text: "", isCorrect: false },
+              ],
+              correctAnswer: "",
+              marks: 0,
+              negativeMarks: 0,
+              explanation: "",
+              image: "",
+              imageExplain: "",
+            });
+          } else if (response?.error) {
+            console.error("Upload error:", response.error);
+            toast.error(response.error.data?.message || "Failed to upload question");
+          }
         }
-        // onClose();
-      } catch (error) {
-        setIsUploading(false);
-        toast.error("An error occurred during the operation");
+      } catch (error: any) {
         console.error("Error:", error);
+        toast.error("An error occurred during the operation");
+      } finally {
+        setIsUploading(false);
       }
     }
   };
@@ -205,7 +291,7 @@ const QuestionInfoForm: React.FC<Props> = ({
           correctAnswer: "",
         };
       } else if (type === "numerical" || type === "phrase") {
-        resetData = { ...resetData, options: [], correctAnswer: "" }; // Reset options and correctAnswer for non-multiple types
+        resetData = { ...resetData, options: [], correctAnswer: "" };
       }
 
       return { ...prev, ...resetData };
@@ -220,10 +306,10 @@ const QuestionInfoForm: React.FC<Props> = ({
       reader.onload = () => {
         setQuestionData((prevData) => ({
           ...prevData,
-          image: reader.result as string, // Store the base64 result of the image
+          image: reader.result as string,
         }));
       };
-      reader.readAsDataURL(file); // Read file as base64
+      reader.readAsDataURL(file);
     }
   };
 
@@ -235,26 +321,27 @@ const QuestionInfoForm: React.FC<Props> = ({
       reader.onload = () => {
         setQuestionData((prevData) => ({
           ...prevData,
-          imageExplain: reader.result as string, // Store the base64 result of the explanation image
+          imageExplain: reader.result as string,
         }));
       };
-      reader.readAsDataURL(file); // Read file as base64
+      reader.readAsDataURL(file);
     }
   };
 
+  // Drag and drop handlers for question image
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    setDragging(true); // Set dragging state to true on drag over
+    setDragging(true);
   };
 
   const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    setDragging(false); // Reset dragging state when leaving the drop area
+    setDragging(false);
   };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    setDragging(false); // Reset dragging state when a file is dropped
+    setDragging(false);
 
     const file = e.dataTransfer.files?.[0];
     if (file) {
@@ -262,10 +349,10 @@ const QuestionInfoForm: React.FC<Props> = ({
       reader.onload = () => {
         setQuestionData((prevData) => ({
           ...prevData,
-          image: reader.result as string, // Store the base64 result of the image
+          image: reader.result as string,
         }));
       };
-      reader.readAsDataURL(file); // Read file as base64
+      reader.readAsDataURL(file);
     }
   };
 
@@ -298,7 +385,7 @@ const QuestionInfoForm: React.FC<Props> = ({
   };
 
   return (
-    <div className=" w-[46vw] max-h-[35vw] overflow-scroll p-6 bg-gradient-to-r from-gray-800 to-zinc-900 rounded-xl shadow-lg mb-6 hover:shadow-2xl transition-all duration-300">
+    <div className="w-[46vw] max-h-[35vw] overflow-scroll p-6 bg-gradient-to-r from-gray-800 to-zinc-900 rounded-xl shadow-lg mb-6 hover:shadow-2xl transition-all duration-300">
       <h2 className="text-2xl text-white font-semibold mb-4">
         {isEdit ? "Edit Question" : "Create New Question"}
       </h2>
@@ -358,7 +445,9 @@ const QuestionInfoForm: React.FC<Props> = ({
               dragging
                 ? "bg-blue-100 dark:bg-blue-800"
                 : "bg-gray-100 dark:bg-gray-700"
-            } hover:border-indigo-500 focus-within:border-indigo-500 ${isUploading ? 'opacity-50 pointer-events-none' : ''}`}
+            } hover:border-indigo-500 focus-within:border-indigo-500 ${
+              isUploading ? "opacity-50 pointer-events-none" : ""
+            }`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
@@ -395,7 +484,9 @@ const QuestionInfoForm: React.FC<Props> = ({
         {questionData?.image && (
           <button
             type="button"
-            className={`mt-3 text-sm bg-red-700 p-2 rounded-md text-gray-100 hover:bg-red-600 ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`mt-3 text-sm bg-red-700 p-2 rounded-md text-gray-100 hover:bg-red-600 ${
+              isUploading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
             onClick={(e) => {
               e.stopPropagation();
               setQuestionData((prev) => ({ ...prev, image: "" }));
@@ -418,7 +509,9 @@ const QuestionInfoForm: React.FC<Props> = ({
               draggingExplain
                 ? "bg-blue-100 dark:bg-blue-800"
                 : "bg-gray-100 dark:bg-gray-700"
-            } hover:border-indigo-500 focus-within:border-indigo-500 ${isUploading ? 'opacity-50 pointer-events-none' : ''}`}
+            } hover:border-indigo-500 focus-within:border-indigo-500 ${
+              isUploading ? "opacity-50 pointer-events-none" : ""
+            }`}
             onDragOver={handleExplainDragOver}
             onDragLeave={handleExplainDragLeave}
             onDrop={handleExplainDrop}
@@ -455,7 +548,9 @@ const QuestionInfoForm: React.FC<Props> = ({
         {questionData?.imageExplain && (
           <button
             type="button"
-            className={`mt-3 text-sm bg-red-700 p-2 rounded-md text-gray-100 hover:bg-red-600 ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`mt-3 text-sm bg-red-700 p-2 rounded-md text-gray-100 hover:bg-red-600 ${
+              isUploading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
             onClick={(e) => {
               e.stopPropagation();
               setQuestionData((prev) => ({ ...prev, imageExplain: "" }));
@@ -473,12 +568,14 @@ const QuestionInfoForm: React.FC<Props> = ({
         <input
           type="number"
           value={questionData.marks}
-          onChange={(e) => handleFieldChange("marks", parseInt(e.target.value))}
+          onChange={(e) => handleFieldChange("marks", parseInt(e.target.value) || 0)}
           className="w-full p-2 mt-2 rounded-md text-gray-400"
           placeholder="Enter the marks"
           disabled={isUploading}
+          min="0"
         />
       </div>
+
       {/* Negative Marks */}
       <div className="mb-4">
         <label className="text-white text-sm">Negative Marks</label>
@@ -486,11 +583,12 @@ const QuestionInfoForm: React.FC<Props> = ({
           type="number"
           value={questionData.negativeMarks}
           onChange={(e) =>
-            handleFieldChange("negativeMarks", parseInt(e.target.value))
+            handleFieldChange("negativeMarks", parseInt(e.target.value) || 0)
           }
           className="w-full p-2 mt-2 rounded-md text-gray-400"
           placeholder="Enter the negative marks (0 for none)"
           disabled={isUploading}
+          min="0"
         />
       </div>
 
@@ -511,7 +609,9 @@ const QuestionInfoForm: React.FC<Props> = ({
         <button
           type="button"
           onClick={onClose}
-          className={`px-4 py-2 bg-gray-500 text-white rounded-md ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
+          className={`px-4 py-2 bg-gray-500 text-white rounded-md ${
+            isUploading ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-600"
+          }`}
           disabled={isUploading}
         >
           Cancel
@@ -519,7 +619,9 @@ const QuestionInfoForm: React.FC<Props> = ({
         <button
           type="button"
           onClick={handleSubmit}
-          className={`px-4 py-2 bg-blue-600 text-white rounded-md flex items-center justify-center ${isUploading ? 'opacity-80' : 'hover:bg-blue-700'}`}
+          className={`px-4 py-2 bg-blue-600 text-white rounded-md flex items-center justify-center ${
+            isUploading ? "opacity-80" : "hover:bg-blue-700"
+          }`}
           disabled={isUploading}
         >
           {isUploading ? (

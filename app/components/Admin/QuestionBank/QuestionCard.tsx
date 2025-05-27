@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 import {
   FaCheckCircle,
-  // FaEdit,
+  FaEdit,
   FaTrashAlt,
   FaChevronDown,
   FaChevronUp,
@@ -236,13 +236,13 @@ const QuestionBank: React.FC<Props> = ({
 
                 <div className="mt-4 flex justify-between">
                   {/* EDIT FEATURE */}
-                  {/* <button
+                  <button
                 onClick={() => setEditPop(true)}
                 className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-500 flex items-center"
               >
                 <FaEdit className="mr-2" />
                 Edit
-              </button> */}
+              </button>
 
                   <button
                     onClick={() => setConfirmDeletePop(true)}

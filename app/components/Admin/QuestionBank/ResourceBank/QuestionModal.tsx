@@ -16,6 +16,8 @@ const QuestionModal= ({
   currentQuestionIndex,
   totalQuestions,
 }:any) => {
+
+  console.log(question);
   if (!question) return null;
 
   const { isCorrect, userAnswer } = isSubmitted
@@ -23,6 +25,7 @@ const QuestionModal= ({
     : { isCorrect: false, userAnswer: "" };
 
   const renderOptions = () => {
+    console.log("hello")
     switch (question.type) {
       case QuestionType.Single:
         return question.options?.map((option:any, index:any) => (
