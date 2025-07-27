@@ -3,6 +3,7 @@ import React from "react";
 import { useTheme } from "next-themes";
 
 const robins = "/assets/team/robins.png";
+const alish = "/assets/team/Alish.jpg";
 const ashok = "/assets/team/TKSS_ASHOK.jpg";
 const yash = "/assets/team/yash.jpg";
 
@@ -15,7 +16,8 @@ const Team = () => {
       : "bg-white text-gray-900";
 
   const teamMembers = [
-    { name: "Robins", college: "IIT Patna", image: robins },
+    { name: "Alish ",role:"Founder", college: "NIT Trichy ", image: alish },
+    { name: "Robins",role:"Co-Founder", college: "IIT Patna", image: robins },
     { name: "TKSS Ashok", college: "IIT Bombay", image: ashok },
     { name: "Yash", college: "IIT Roorkee", image: yash },
   ];
@@ -48,6 +50,9 @@ const Team = () => {
                 className="rounded-full mb-4"
               />
               <h2 className="text-xl font-semibold mb-2">{member.name}</h2>
+              {
+                member.role && <h5 className="text-xl font-semibold mb-2">{member.role}</h5>
+              }
               <p className="text-gray-500 dark:text-gray-400">
                 {member.college}
               </p>
