@@ -53,7 +53,7 @@ const Footer: React.FC = () => {
               </Link>
             </li>
             <li>
-            <a
+              <a
                 // href="https://res.cloudinary.com/drjgdryev/image/upload/v1737710771/Privacy__Policy_1_dxakeu.pdf" // Replace with the actual path to your PDF
                 href="/tnc"
                 target="_blank"
@@ -61,13 +61,13 @@ const Footer: React.FC = () => {
                 className="hover:underline hover:text-blue-600 transition-colors duration-300"
               >
                 Terms & Conditions
-                </a>
+              </a>
               {/* <Link href="https://res.cloudinary.com/drjgdryev/image/upload/v1737710862/Terms_and_Conditions_1_chklhq.pdf" className="hover:underline hover:text-blue-600 transition-colors duration-300">
                 Terms & Conditions
               </Link> */}
             </li>
             <li>
-            <a
+              <a
                 // href="https://res.cloudinary.com/drjgdryev/image/upload/v1737710771/Privacy__Policy_1_dxakeu.pdf" // Replace with the actual path to your PDF
                 href="/refund-policy"
                 target="_blank"
@@ -75,7 +75,7 @@ const Footer: React.FC = () => {
                 className="hover:underline hover:text-blue-600 transition-colors duration-300"
               >
                 Refund / Cancellation Policy
-                </a>
+              </a>
               {/* <Link href="https://res.cloudinary.com/drjgdryev/image/upload/v1737710935/Refund_1_gwfs4g.pdf" className="hover:underline hover:text-blue-600 transition-colors duration-300">
                 Refund / Cancellation Policy
               </Link> */}
@@ -97,14 +97,14 @@ const Footer: React.FC = () => {
           <h3 className="text-xl font-semibold mb-2">Contact Us</h3>
           <p className="mb-2">
             Email:{" "}
-            <a href="mailto:edugrantor@gmail.com" className="text-blue-600 hover:underline">
-              edugrantor@gmail.com
+            <a href="mailto:support@edugrantor.com" className="text-blue-600 hover:underline">
+              support@edugrantor.com
             </a>
           </p>
           <p>
             Phone:{" "}
             <a href="tel:+919798790328" className="text-blue-600 hover:underline">
-              +91 9798790328
+              +91 979797XXXX
             </a>
           </p>
         </div>
@@ -113,7 +113,7 @@ const Footer: React.FC = () => {
       </div>
       <div className="border-t border-gray-300 mt-10 pt-6">
         <div className="text-center">
-          
+
           <p className="text-sm">Copyright &copy; {new Date().getFullYear()} EDU GRANTORS. All rights reserved.</p>
         </div>
       </div>

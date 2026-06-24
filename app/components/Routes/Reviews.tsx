@@ -14,25 +14,24 @@ type Review = {
 const defaultImage = "/assets/6.png";
 const reviews: Review[] = [
   {
-    username: "Ayush, NIT Kurukshetra",
+    username: "Himanshu Raj, IIT Patna",
     rating: 5,
     reviewText:
       "This test series help me to realise my mistake and reduced the exam pressure. The question were relevant and covered various types of questions.The mentors helped me to understand my weak areas and work on it. They also told the important topics which must be covered and it helped me to boost my score.",
-    profileImage: "/reviews/Ayush.jpg",
+    profileImage: "/reviews/himanshuraj.jpeg",
   },
   {
-    username: "Raunak, NIT Durgapur",
+    username: "Gaurav Beniwal, IIT Patna",
     rating: 4,
     reviewText:
       "Their mentorship programme gave me consistent support and motivatation in last moments of JEE preparation. The test series was perfect blueprint of what asked in JEE exam which boosted my rank a lot.",
-    profileImage: "",
+    profileImage: "/reviews/gaurav.jpeg",
   },
   {
-    username: "Rachit Raj, NIT Bhopal",
-    rating: 4,
+    username: "Atharv Bagde, IIT Patna",
+    rating: 3,
     reviewText:
-      "Their mentorship programme gave me consistent support and motivatation in last moments of JEE preparation. The test series was perfect blueprint of what asked in JEE exam which boosted my rank a lot.",
-    profileImage: "/reviews/RachitRaj.jpg",
+      "The mock tests were incredibly close to the actual JEE difficulty level, which helped me master my time management. The personalized feedback from the mentors kept me on track and gave me the confidence I needed to succeed on exam day. Highly recommended for serious aspirants!", profileImage: "/reviews/atharv.jpeg",
   },
 ];
 
@@ -75,11 +74,10 @@ const Reviews: FC = () => {
               {Array.from({ length: 5 }).map((_, starIndex) => (
                 <AiFillStar
                   key={starIndex}
-                  className={`text-lg sm:text-xl md:text-2xl transition-colors ${
-                    starIndex < review.rating
-                      ? "text-yellow-400"
-                      : "text-gray-300"
-                  }`}
+                  className={`text-lg sm:text-xl md:text-2xl transition-colors ${starIndex < review.rating
+                    ? "text-yellow-400"
+                    : "text-gray-300"
+                    }`}
                 />
               ))}
             </div>
