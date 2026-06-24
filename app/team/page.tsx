@@ -7,8 +7,8 @@ const mayank = "/assets/team/mayank.png";
 const kushal = "/assets/team/kushal.jpeg";
 const dhoni = "/assets/team/dhoni.jpeg";
 const sachin = "/assets/team/sachin.png";
-const atul = "/assets/team/dummy.png";
-const himanshu = "/assets/team/himanshu.png";
+// const atul = "/assets/team/dummy.png";
+// const himanshu = "/assets/team/himanshu.png";
 const karan = "/assets/team/karan.jpeg";
 const robin = "/assets/team/robins.png";
 
