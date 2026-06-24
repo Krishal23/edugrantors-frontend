@@ -1,11 +1,14 @@
 "use client";
 import React from "react";
 import { useTheme } from "next-themes";
+import { FaLinkedin, FaGithub } from "react-icons/fa";
 
-const robins = "/assets/team/robins.png";
-const alish = "/assets/team/Alish.jpg";
-const ashok = "/assets/team/TKSS_ASHOK.jpg";
-const yash = "/assets/team/yash.jpg";
+const mayank = "/assets/team/mayank.png";
+const kushal = "/assets/team/kushal.jpeg";
+const dhoni = "/assets/team/dhoni.jpeg";
+const sachin = "/assets/team/sachin.png";
+const atul = "/assets/team/dummy.png";
+const himanshu = "/assets/team/himanshu.png";
 
 const Team = () => {
   const { theme } = useTheme();
@@ -16,10 +19,12 @@ const Team = () => {
       : "bg-white text-gray-900";
 
   const teamMembers = [
-    { name: "Alish ",role:"Founder", college: "NIT Trichy ", image: alish },
-    { name: "Robins",role:"Co-Founder", college: "IIT Patna", image: robins },
-    { name: "TKSS Ashok", college: "IIT Bombay", image: ashok },
-    { name: "Yash", college: "IIT Roorkee", image: yash },
+    { name: "Kushal Kesharwani ", role: "Developer", college: "IIT Patna ", image: kushal, Linkedin: "https://www.linkedin.com/in/kushal-kesharwani-49000525b/", github: "https://github.com/Krishal23" },
+    { name: "Mayank Jha", role: "Developer", college: "IIT Patna", image: mayank, Linkedin: "https://www.linkedin.com/in/mayank-jha-aaa4b5289/" },
+    { name: "Atul Raj Chaudhary", role: "Developer", college: "IIT Patna ", image: atul, Linkedin: "https://www.linkedin.com/in/atul-raj-b3b4b630a/" },
+    { name: "Himanshu Kumar", role: "Developer", college: "IIT Patna ", image: himanshu, Linkedin: "https://www.linkedin.com/in/himanshu-kumar-b2a7b0282/" },
+    { name: "Dhoni naik Gugulothu", role: "Creative Lead", college: "IIT Patna", image: dhoni, Linkedin: "https://www.linkedin.com/in/dhoni-naik-gugulothu-74a95a298/" },
+    { name: "Sachin Kumar", role: "Creative Lead", college: "IIT Patna", image: sachin },
   ];
 
   return (
@@ -51,11 +56,38 @@ const Team = () => {
               />
               <h2 className="text-xl font-semibold mb-2">{member.name}</h2>
               {
-                member.role && <h5 className="text-xl font-semibold mb-2">{member.role}</h5>
+                member.role && <h5 className="text-lg font-medium text-gray-600 dark:text-gray-300 mb-1">{member.role}</h5>
               }
-              <p className="text-gray-500 dark:text-gray-400">
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
                 {member.college}
               </p>
+
+              {/* Social Icons Container */}
+              <div className="flex gap-4 mt-auto">
+                {member.Linkedin && (
+                  <a
+                    href={member.Linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#0077b5] hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-300"
+                    aria-label={`${member.name}'s LinkedIn`}
+                  >
+                    <FaLinkedin size={24} />
+                  </a>
+                )}
+                {member.github && (
+                  <a
+                    href={member.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-900 hover:text-gray-600 dark:text-white dark:hover:text-gray-300 transition-colors duration-300"
+                    aria-label={`${member.name}'s GitHub`}
+                  >
+                    <FaGithub size={24} />
+                  </a>
+                )}
+              </div>
+
             </div>
           ))}
         </div>
