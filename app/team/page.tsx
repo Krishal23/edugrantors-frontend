@@ -9,7 +9,9 @@ const dhoni = "/assets/team/dhoni.jpeg";
 const sachin = "/assets/team/sachin.png";
 const atul = "/assets/team/dummy.png";
 const himanshu = "/assets/team/himanshu.png";
+const karan = "/assets/team/karan.jpeg";
 const robin = "/assets/team/robins.png";
+
 
 
 const Team = () => {
@@ -22,10 +24,11 @@ const Team = () => {
 
   const teamMembers = [
     { name: "Robins", role: "Founder", college: "IIT Patna", image: robin, Linkedin: "https://www.linkedin.com/in/robins-033862241/" },
+    { name: "Karan Kumar Das", role: "Developer", college: "IIT BHU", image: karan, Linkedin: "https://www.linkedin.com/in/karan-iitbhu/", github: "https://github.com/karankoder" },
     { name: "Kushal Kesharwani ", role: "Developer", college: "IIT Patna ", image: kushal, Linkedin: "https://www.linkedin.com/in/kushal-kesharwani-49000525b/", github: "https://github.com/Krishal23" },
     { name: "Mayank Jha", role: "Developer", college: "IIT Patna", image: mayank, Linkedin: "https://www.linkedin.com/in/mayank-jha-aaa4b5289/" },
-    { name: "Atul Raj Chaudhary", role: "Developer", college: "IIT Patna ", image: atul, Linkedin: "https://www.linkedin.com/in/atul-raj-b3b4b630a/" },
-    { name: "Himanshu Kumar", role: "Developer", college: "IIT Patna ", image: himanshu, Linkedin: "https://www.linkedin.com/in/himanshu-kumar-b2a7b0282/" },
+    // { name: "Atul Raj Chaudhary", role: "Developer", college: "IIT Patna ", image: atul, Linkedin: "https://www.linkedin.com/in/atul-raj-b3b4b630a/" },
+    // { name: "Himanshu Kumar", role: "Developer", college: "IIT Patna ", image: himanshu, Linkedin: "https://www.linkedin.com/in/himanshu-kumar-b2a7b0282/" },
     { name: "Dhoni naik Gugulothu", role: "Creative Lead", college: "IIT Patna", image: dhoni, Linkedin: "https://www.linkedin.com/in/dhoni-naik-gugulothu-74a95a298/" },
     { name: "Sachin Kumar", role: "Creative Lead", college: "IIT Patna", image: sachin },
 
